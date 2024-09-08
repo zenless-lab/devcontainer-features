@@ -1,0 +1,51 @@
+{
+    "test-gh-ubuntu": {
+        "image": "ubuntu",
+        "features": {
+            "pkg-install": {
+                "all": "gh git"
+            }
+        }
+    },
+    "test-gh-alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "pkg-install": {
+                "apk": "github-cli"
+            }
+        }
+    },
+    "test-gh-debian": {
+        "image": "debian",
+        "features": {
+            "pkg-install": {
+                "all": "gh",
+                "apt": "git"
+            }
+        }
+    },
+    "test-gh-opensuse": {
+        "image": "opensuse/leap",
+        "features": {
+            "pkg-install": {
+                "all": "gh git"
+            }
+        }
+    },
+    "test-gh-arch": {
+        "image": "archlinux",
+        "features": {
+            "pkg-install": {
+                "all": "github-cli git"
+            }
+        }
+    },
+    "test-gh-fedora": {
+        "image": "fedora",
+        "features": {
+            "pkg-install": {
+                "all": "gh git"
+            }
+        }
+    }
+}

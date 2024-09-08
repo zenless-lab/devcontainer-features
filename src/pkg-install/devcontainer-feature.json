@@ -1,0 +1,71 @@
+{
+	"id": "pkg-install",
+	"version": "0.1.0",
+	"name": "Utility Package Installer",
+	"description": "Installs packages for different package managers.",
+	"options": {
+		"all": {
+			"type": "string",
+			"default": ""
+		},
+		"apt": {
+			"type": "string",
+			"default": ""
+		},
+		"use_apt": {
+			"type": "boolean",
+			"default": true
+		},
+		"yum": {
+			"type": "string",
+			"default": ""
+		},
+		"use_yum": {
+			"type": "boolean",
+			"default": true
+		},
+		"dnf": {
+			"type": "string",
+			"default": ""
+		},
+		"use_dnf": {
+			"type": "boolean",
+			"default": true
+		},
+		"pacman": {
+			"type": "string",
+			"default": ""
+		},
+		"use_pacman": {
+			"type": "boolean",
+			"default": true
+		},
+		"zypper": {
+			"type": "string",
+			"default": ""
+		},
+		"use_zypper": {
+			"type": "boolean",
+			"default": true
+		},
+		"rpm": {
+			"type": "string",
+			"default": ""
+		},
+		"use_rpm": {
+			"type": "boolean",
+			"default": true
+		},
+		"apk": {
+			"type": "string",
+			"default": ""
+		},
+		"use_apk": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"installsAfter": [
+		"ghcr.io/devcontainers/features/common-utils"
+	]
+}
