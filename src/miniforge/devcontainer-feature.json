@@ -1,0 +1,32 @@
+{
+    "id": "miniforge",
+    "version": "0.1.0",
+    "name": "Miniforge Package Manager",
+    "description": "Installs Miniforge package manager.",
+    "options": {
+        "version": {
+            "type": "string",
+            "default": "latest",
+            "description": "Version of Miniforge to install"
+        },
+        "use_auto_activation": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable auto-activation"
+        },
+        "allow_update": {
+            "type": "boolean",
+            "default": true,
+            "description": "Allow Miniforge to update itself"
+        },
+        "init_zsh":{
+            "type": "boolean",
+            "default": true,
+            "description": "Initialize Miniforge in zsh"
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/python"
+    ]
+}
