@@ -1,0 +1,32 @@
+{
+    "id": "rye",
+    "version": "0.1.0",
+    "name": "Rye Package Manager",
+    "description": "Installs the Rye package manager.",
+    "options": {
+        "version": {
+            "type": "string",
+            "default": "latest",
+            "description": "Version of Rye to install"
+        },
+        "use_uv": {
+            "type": "boolean",
+            "default": true,
+            "description": "Use UV to manage dependencies"
+        },
+        "use_auto_completion": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable auto-completion"
+        },
+        "use_global_python": {
+            "type": "boolean",
+            "default": true,
+            "description": "Use the global Python interpreter"
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/python"
+    ]
+}
