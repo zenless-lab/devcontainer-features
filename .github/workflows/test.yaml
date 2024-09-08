@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         features:
+          - editors
           - miniforge
           - rye
           - uv
@@ -37,6 +38,7 @@ jobs:
     strategy:
       matrix:
         features:
+          - editors
           - miniforge
           - rye
           - uv
