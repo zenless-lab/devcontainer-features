@@ -1,0 +1,9 @@
+{
+    "id": "editors",
+    "version": "0.1.0",
+    "name": "Editors",
+    "description": "Installs various command-line editors.",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
