@@ -1,0 +1,36 @@
+{
+    "id": "zsh-common",
+    "version": "0.1.0",
+    "name": "ZSH Common",
+    "description": "Installs and configures zsh with common plugins.",
+    "options": {
+        "set_default": {
+            "type": "boolean",
+            "default": false,
+            "description": "Set zsh as the default shell"
+        },
+        "install_powerlevel10k": {
+            "type": "boolean",
+            "default": false,
+            "description": "Install and configure Powerlevel10k prompt"
+        },
+        "install": {
+            "type": "string",
+            "default": "",
+            "description": "Comma-separated list of plugins to install"
+        },
+        "skip": {
+            "type": "string",
+            "default": "",
+            "description": "Comma-separated list of plugins to skip"
+        },
+        "accept_suggest_key": {
+            "type": "string",
+            "default": "^ ",
+            "description": "Accept the suggestion to bind the suggestion key"
+        }
+    },
+    "installsAfter": [
+		"ghcr.io/devcontainers/features/common-utils"
+	]
+}
