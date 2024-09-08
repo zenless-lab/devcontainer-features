@@ -1,0 +1,47 @@
+{
+    "test-zsh-ubuntu": {
+        "image": "ubuntu",
+        "features": {
+            "zsh-common": {
+                "set_default": true,
+                "install_powerlevel10k": true
+            }
+        }
+    },
+    "test-zsh-alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "zsh-common": {
+                "set_default": true,
+                "install_powerlevel10k": true
+            }
+        }
+    },
+    "test-zsh-debian": {
+        "image": "debian",
+        "features": {
+            "zsh-common": {
+                "set_default": true,
+                "install_powerlevel10k": true
+            }
+        }
+    },
+    "test-zsh-arch": {
+        "image": "archlinux",
+        "features": {
+            "zsh-common": {
+                "set_default": true,
+                "install_powerlevel10k": true
+            }
+        }
+    },
+    "test-zsh-fedora": {
+        "image": "fedora",
+        "features": {
+            "zsh-common": {
+                "set_default": true,
+                "install_powerlevel10k": true
+            }
+        }
+    }
+}
