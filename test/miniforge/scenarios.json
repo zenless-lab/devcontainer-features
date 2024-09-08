@@ -1,0 +1,18 @@
+{
+    "miniforge-24-1-2-0": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "miniforge": {
+                "version": "24.1.2-0"
+            }
+        }
+    },
+    "miniforge-zsh": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "miniforge": {
+                "init_zsh": true
+            }
+        }
+    }
+}
