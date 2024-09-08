@@ -1,0 +1,19 @@
+{
+    "id": "poetry",
+    "version": "0.1.0",
+    "name": "Poetry Package Manager",
+    "description": "Installs the Poetry package manager.",
+    "dependsOn": {
+        "ghcr.io/devcontainers/features/python": {}
+    },
+    "options": {
+        "version": {
+            "type": "string",
+            "default": "latest",
+            "description": "Version of Poetry to install"
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}

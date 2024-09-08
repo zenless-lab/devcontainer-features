@@ -1,0 +1,16 @@
+{
+    "poetry-zsh": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:2": {"configureZshAsDefaultShell": true},
+            "poetry": {}
+        }
+    },
+    "poetry-version": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:2": {"configureZshAsDefaultShell": true},
+            "poetry": {"version": "1.2.0"}
+        }
+    }
+}
