@@ -1,0 +1,19 @@
+{
+    "rye-global": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "rye": {
+                "use_global_python": true
+            }
+        }
+    },
+    "rye-version": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "rye": {
+                "use_global_python": false,
+                "version": "0.30.0"
+            }
+        }
+    }
+}

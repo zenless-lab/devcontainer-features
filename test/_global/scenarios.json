@@ -1,13 +1,9 @@
 {
-    "color_and_hello": {
+    "rye_and_miniforge": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
-            "color": {
-                "favorite": "purple"
-            },
-            "hello": {
-                "greeting": "Greetings"
-            }
+            "miniforge":{},
+            "rye":{}
         }
     }
 }
