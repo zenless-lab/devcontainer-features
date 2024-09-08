@@ -17,6 +17,7 @@ jobs:
           - rye
           - uv
           - poetry
+          - pkg-install
           - zsh-common
         baseImage:
           - mcr.microsoft.com/devcontainers/base:ubuntu
@@ -40,6 +41,7 @@ jobs:
           - rye
           - uv
           - poetry
+          - pkg-install
           - zsh-common
     steps:
       - uses: actions/checkout@v4
