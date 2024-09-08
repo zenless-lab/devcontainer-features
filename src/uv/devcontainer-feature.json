@@ -1,0 +1,17 @@
+{
+    "id": "uv",
+    "version": "0.1.0",
+    "name": "UV Package Manager",
+    "description": "Installs the UV package manager.",
+    "options": {
+        "use_auto_completion": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable auto-completion"
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/python"
+    ]
+}
