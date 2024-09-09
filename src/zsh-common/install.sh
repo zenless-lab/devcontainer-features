@@ -85,9 +85,6 @@ if $install_powerlevel10k; then
     echo "Installing Powerlevel10k prompt..."
     sudo -u $_REMOTE_USER git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$remote_user_home/.oh-my-zsh/custom}/themes/powerlevel10k
     sudo -u $_REMOTE_USER sed -i 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' $remote_user_home/.zshrc
-
-    cat ./sync_p10k_cfg.sh >> $remote_user_home/.zshrc
-
     echo "Powerlevel10k installed."
 fi
 
