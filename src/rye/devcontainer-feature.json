@@ -1,6 +1,6 @@
 {
     "id": "rye",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "name": "Rye Package Manager",
     "description": "Installs the Rye package manager.",
     "options": {

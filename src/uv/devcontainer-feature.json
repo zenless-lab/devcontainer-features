@@ -1,6 +1,6 @@
 {
     "id": "uv",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "name": "UV Package Manager",
     "description": "Installs the UV package manager.",
     "options": {

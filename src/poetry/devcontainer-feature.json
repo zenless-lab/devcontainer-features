@@ -1,6 +1,6 @@
 {
     "id": "poetry",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "name": "Poetry Package Manager",
     "description": "Installs the Poetry package manager.",
     "dependsOn": {
