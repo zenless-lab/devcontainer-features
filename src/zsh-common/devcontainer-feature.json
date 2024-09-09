@@ -1,6 +1,6 @@
 {
     "id": "zsh-common",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "name": "ZSH Common",
     "description": "Installs and configures zsh with common plugins.",
     "options": {
