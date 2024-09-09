@@ -19,7 +19,7 @@ Installs and configures zsh with common plugins.
 | install_powerlevel10k | Install and configure Powerlevel10k prompt | boolean | false |
 | install | Comma-separated list of plugins to install | string | - |
 | skip | Comma-separated list of plugins to skip | string | - |
-| accept_suggest_key | Accept the suggestion to bind the suggestion key | string | ^  |
+| accept_suggest_key | Accept the suggestion to bind the suggestion key | string | - |
 
 
 
