@@ -26,7 +26,7 @@
         },
         "accept_suggest_key": {
             "type": "string",
-            "default": "^ ",
+            "default": "",
             "description": "Accept the suggestion to bind the suggestion key"
         }
     },

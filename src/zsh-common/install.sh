@@ -108,7 +108,7 @@ echo "Configuring autosuggestions..."
 echo 'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#808080"' >> $remote_user_home/.zshrc
 echo "Setting autosuggestions highlight style to fg=#808080"
 
-if [ -n "$accept_suggest_key" ] && [[ " ${plugins_to_install[@]} " =~ "zsh-autosuggestions" ]]; then
+if [ -n "$accept_suggest_key" ]; then
     echo "Binding autosuggestions key..."
     if ! sudo -u $_REMOTE_USER grep -q "bindkey \"$accept_suggest_key\" autosuggest-accept" $remote_user_home/.zshrc; then
         sudo -u $_REMOTE_USER echo "bindkey \"$accept_suggest_key\" autosuggest-accept" >> $remote_user_home/.zshrc
