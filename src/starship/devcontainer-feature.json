@@ -1,0 +1,10 @@
+{
+    "id": "starship",
+    "version": "0.1.0",
+    "name": "Starship Prompt",
+    "description": "Installs the Starship prompt",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/zenless-lab/devcontainer-features/zsh-common"
+    ]
+}

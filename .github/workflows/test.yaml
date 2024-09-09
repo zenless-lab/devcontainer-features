@@ -15,10 +15,11 @@ jobs:
         features:
           - editors
           - miniforge
-          - rye
-          - uv
-          - poetry
           - pkg-install
+          - poetry
+          - rye
+          - starship
+          - uv
           - zsh-common
         baseImage:
           - mcr.microsoft.com/devcontainers/base:ubuntu
@@ -40,10 +41,11 @@ jobs:
         features:
           - editors
           - miniforge
-          - rye
-          - uv
-          - poetry
           - pkg-install
+          - poetry
+          - rye
+          - starship
+          - uv
           - zsh-common
     steps:
       - uses: actions/checkout@v4
