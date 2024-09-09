@@ -20,3 +20,5 @@ if command -v zsh &> /dev/null; then
     echo 'Found zsh, setting up starship...'
     echo 'eval "$(starship init zsh)"' >> $remote_user_home/.zshrc
 fi
+
+starship preset pure-preset -o $remote_user_home/.config/starship.toml
