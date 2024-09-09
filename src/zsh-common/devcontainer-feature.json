@@ -30,13 +30,6 @@
             "description": "Accept the suggestion to bind the suggestion key"
         }
     },
-    "mounts": [
-        {
-            "type": "volume",
-            "source": "p10k-config",
-            "target": "/p10k.zsh"
-        }
-    ],
     "installsAfter": [
 		"ghcr.io/devcontainers/features/common-utils"
 	]
