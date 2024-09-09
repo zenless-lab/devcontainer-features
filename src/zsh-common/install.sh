@@ -19,11 +19,10 @@ IFS=',' read -r -a skip_array <<< "$skip"
 declare -A plugins
 plugins=(
     ["fzf"]="https://github.com/junegunn/fzf"
-    ["fzf-tab"]="https://github.com/Aloxaf/fzf-tab"
+    # ["fzf-tab"]="https://github.com/Aloxaf/fzf-tab"
     ["zsh-autosuggestions"]="https://github.com/zsh-users/zsh-autosuggestions"
     ["zsh-syntax-highlighting"]="https://github.com/zsh-users/zsh-syntax-highlighting"
     ["zsh-completions"]="https://github.com/zsh-users/zsh-completions"
-    # ["autojump"]="https://github.com/wting/autojump"
     ["sudo"]=""
     ["z"]=""
     ["safe-paste"]=""
@@ -37,7 +36,7 @@ echo "Installing zsh and plugins..."
 # Install oh-my-zsh, if not already installed
 if [ ! -d $remote_user_home/.oh-my-zsh ]; then
     echo "Installing oh-my-zsh..."
-    sudo -u $_REMOTE_USER sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    sudo -u $_REMOTE_USER sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
 # Function to install a plugin
@@ -48,10 +47,6 @@ install_plugin() {
         if [ "$plugin" == "fzf" ]; then
             sudo -u $_REMOTE_USER git clone --depth 1 https://github.com/junegunn/fzf.git $remote_user_home/.fzf
             sudo -u $_REMOTE_USER $remote_user_home/.fzf/install --all
-        elif [ "$plugin" == "autojump" ]; then
-            # Never
-            sudo -u $_REMOTE_USER git clone $url $remote_user_home/.autojump
-            sudo -u $_REMOTE_USER $remote_user_home/.autojump/install.py
         else
             sudo -u $_REMOTE_USER git clone $url ${ZSH_CUSTOM:-$remote_user_home/.oh-my-zsh/custom}/plugins/$plugin
         fi
@@ -85,20 +80,14 @@ for plugin in "${plugins_to_install[@]}"; do
     echo "$plugin installed."
 done
 
-# Bind autosuggestions key, when autosuggestions are installed
-if [ -n "$accept_suggest_key" ] && [[ " ${plugins_to_install[@]} " =~ "zsh-autosuggestions" ]]; then
-    echo "Binding autosuggestions key..."
-    if ! sudo -u $_REMOTE_USER grep -q "bindkey \"$accept_suggest_key\" autosuggest-accept" $remote_user_home/.zshrc; then
-        sudo -u $_REMOTE_USER echo "bindkey \"$accept_suggest_key\" autosuggest-accept" >> $remote_user_home/.zshrc
-    fi
-    echo "Autosuggestions key bound."
-fi
-
 # Install and configure Powerlevel10k if the option is enabled
 if $install_powerlevel10k; then
     echo "Installing Powerlevel10k prompt..."
     sudo -u $_REMOTE_USER git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$remote_user_home/.oh-my-zsh/custom}/themes/powerlevel10k
     sudo -u $_REMOTE_USER sed -i 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' $remote_user_home/.zshrc
+
+    cat ./sync_p10k_cfg.sh >> $remote_user_home/.zshrc
+
     echo "Powerlevel10k installed."
 fi
 
@@ -115,6 +104,19 @@ if $set_default; then
 
     chsh -s $(which zsh) $_REMOTE_USER
     echo "Zsh set as the default shell."
+fi
+
+# Bind autosuggestions key, when autosuggestions are installed
+echo "Configuring autosuggestions..."
+echo 'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#808080"' >> $remote_user_home/.zshrc
+echo "Setting autosuggestions highlight style to fg=#808080"
+
+if [ -n "$accept_suggest_key" ] && [[ " ${plugins_to_install[@]} " =~ "zsh-autosuggestions" ]]; then
+    echo "Binding autosuggestions key..."
+    if ! sudo -u $_REMOTE_USER grep -q "bindkey \"$accept_suggest_key\" autosuggest-accept" $remote_user_home/.zshrc; then
+        sudo -u $_REMOTE_USER echo "bindkey \"$accept_suggest_key\" autosuggest-accept" >> $remote_user_home/.zshrc
+    fi
+    echo "Autosuggestions key bound."
 fi
 
 echo "Zsh and plugins installation complete for $_REMOTE_USER."
