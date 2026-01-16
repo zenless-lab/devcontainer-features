@@ -1,0 +1,26 @@
+{
+    "specific_version": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "mamba": {
+                "version": "24.9.2-0"
+            }
+        }
+    },
+    "init_shells_none": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "mamba": {
+                "init_shells": "none"
+            }
+        }
+    },
+    "init_shells_zsh": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "mamba": {
+                "init_shells": "zsh"
+            }
+        }
+    }
+}
