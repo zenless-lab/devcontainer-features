@@ -67,7 +67,7 @@ install_micromamba() {
 }
 
 init_shells() {
-    local SHELLS=$(echo "${INIT_SHELLS:-zsh}" | tr ',' ' ')
+    local SHELLS=$(echo "${INIT_SHELLS:-bash}" | tr ',' ' ')
     if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
         MICROMAMBA_ROOT="/home/${_REMOTE_USER}/.micromamba"
     else
