@@ -1,0 +1,33 @@
+{
+    "test": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "micromamba": {}
+        }
+    },
+    "specific_version": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "micromamba": {
+                "version": "1.5.10"
+            }
+        }
+    },
+    "init_shells_zsh": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "micromamba": {
+                "init_shells": "zsh"
+            },
+            "ghcr.io/devcontainers/features/common-utils:2": {
+                "configureZshAsDefaultShell": true
+            }
+        }
+    },
+    "rockylinux": {
+        "image": "rockylinux:9.3.20231119-minimal",
+        "features": {
+            "micromamba": {}
+        }
+    }
+}
