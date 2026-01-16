@@ -59,11 +59,16 @@ install_micromamba() {
     else
         RELEASE_URL="https://micro.mamba.pm/api/micromamba/${PLATFORM}-${ARCH}/${VERSION}"
     fi
-    curl -Ls "${RELEASE_URL}" | tar -xvj bin/micromamba
+
+    # Use a temporary directory for extraction to avoid depending on the current working directory
+    local TMP_DIR
+    TMP_DIR="$(mktemp -d)"
+    curl -Ls "${RELEASE_URL}" | tar -xvj -C "${TMP_DIR}" bin/micromamba
 
     # Move micromamba to /usr/local/bin
-    mv bin/micromamba /usr/local/bin/micromamba
+    mv "${TMP_DIR}/bin/micromamba" /usr/local/bin/micromamba
     chmod +x /usr/local/bin/micromamba
+    rm -rf "${TMP_DIR}"
 }
 
 init_shells() {
