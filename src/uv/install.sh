@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 
 echo "Starting UV installation script..."
@@ -7,6 +7,15 @@ echo "Starting UV installation script..."
 
 UV_VERSION="${VERSION:-latest}"
 COMPLETION_SHELL="${COMPLETION_SHELL:-automatic}"
+
+
+find_user_home() {
+    if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
+        echo "/home/${_REMOTE_USER}"
+    else
+        echo "/root"
+    fi
+}
 
 
 detect_installed_shell() {
@@ -32,22 +41,24 @@ detect_installed_shell() {
 
 check_is_init_autocompletion() {
     local shell_name="$1"
+    local remote_user_home
+    remote_user_home=$(find_user_home)
     case "$shell_name" in
         bash)
             local pattern="uv generate-shell-completion bash"
-            local profile_files="~/.bashrc ~/.bash_profile ~/.profile"
+            local profile_files="${remote_user_home}/.bashrc ${remote_user_home}/.bash_profile ${remote_user_home}/.profile"
             ;;
         zsh)
             local pattern="uv generate-shell-completion zsh"
-            local profile_files="~/.zshrc"
+            local profile_files="${remote_user_home}/.zshrc"
             ;;
         fish)
             local pattern="uv generate-shell-completion fish"
-            local profile_files="~/.config/fish/completions/uv.fish"
+            local profile_files="${remote_user_home}/.config/fish/completions/uv.fish"
             ;;
         elvish)
             local pattern="uv generate-shell-completion elvish"
-            local profile_files="~/.elvish/rc.elv"
+            local profile_files="${remote_user_home}/.elvish/rc.elv"
             ;;
         *)
             echo "Shell $shell_name is not supported for autocompletion initialization."
