@@ -1,0 +1,12 @@
+{
+    "build_test": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "tauri": {},
+            "ghcr.io/devcontainers/features/node:1": {
+                "pnpm": "latest"
+            },
+            "ghcr.io/devcontainers/features/rust:1": {}
+        }
+    }
+}
