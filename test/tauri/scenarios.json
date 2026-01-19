@@ -16,14 +16,5 @@
             "ghcr.io/devcontainers/features/node:1": {},
             "ghcr.io/devcontainers/features/rust:1": {}
         }
-    },
-    "alpine": {
-        "image": "mcr.microsoft.com/devcontainers/base:alpine",
-        "features": {
-            "tauri": {},
-            "ghcr.io/devcontainers/features/common-utils:1": {},
-            "ghcr.io/devcontainers/features/node:1": {},
-            "ghcr.io/devcontainers/features/rust:1": {}
-        }
     }
 }
