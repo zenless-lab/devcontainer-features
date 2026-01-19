@@ -1,0 +1,31 @@
+{
+    "name": "uv",
+    "id": "uv",
+    "version": "1.0.0",
+    "description": "An extremely fast Python package installer and resolver, written in Rust.",
+    "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/uv",
+    "options": {
+        "version": {
+            "type": "string",
+            "proposals": [
+                "latest",
+                "0.9.24"
+            ],
+            "default": "latest",
+            "description": "Select the version of uv to install."
+        },
+        "completion_shell": {
+            "type": "string",
+            "proposals": [
+                "automatic",
+                "bash,zsh,fish",
+                ""
+            ],
+            "default": "automatic",
+            "description": "Install autocompletion for a specific shell, or try to detect automatically."
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}

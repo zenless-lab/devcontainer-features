@@ -17,6 +17,7 @@ jobs:
           - hello
           - mamba
           - micromamba
+          - uv
         baseImage:
           - debian:latest
           - ubuntu:latest
@@ -40,6 +41,7 @@ jobs:
           - hello
           - mamba
           - micromamba
+          - uv
     steps:
       - uses: actions/checkout@v4
 
