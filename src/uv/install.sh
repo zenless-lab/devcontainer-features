@@ -90,7 +90,7 @@ setup_autocompletion() {
 }
 
 install_deps() {
-    if command -v curl >/dev/null 2>&1 && command -v ca-certificates >/dev/null 2>&1; then
+    if command -v curl >/dev/null 2>&1; then
         echo "Dependencies already installed."
         return
     fi
