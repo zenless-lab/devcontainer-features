@@ -6,15 +6,7 @@ set -euo pipefail
 install_deps_apt() {
     apt-get update
     # if libwebkit2gtk-4.1-dev is not available (e.g. Ubuntu 20.04), fall back to libwebkit2gtk-4.0-dev
-    local WEBKIT_PKG=""
-    if apt-cache show libwebkit2gtk-4.1-dev >/dev/null 2>&1; then
-        WEBKIT_PKG="libwebkit2gtk-4.1-dev"
-    else
-        WEBKIT_PKG="libwebkit2gtk-4.0-dev libgtk-3-dev"
-    fi
-
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        $WEBKIT_PKG \
+    local pkgs="\
         build-essential \
         curl \
         wget \
@@ -22,7 +14,19 @@ install_deps_apt() {
         libxdo-dev \
         libssl-dev \
         libayatana-appindicator3-dev \
-        librsvg2-dev
+        librsvg2-dev"
+
+    if apt-cache show libwebkit2gtk-4.1-dev >/dev/null 2>&1; then
+        pkgs="$pkgs libwebkit2gtk-4.1-dev"
+    else
+        pkgs="$pkgs libwebkit2gtk-4.0-dev libgtk-3-dev"
+    fi
+
+    if ! dpkg -s xdg-utils >/dev/null 2>&1; then
+        pkgs="$pkgs xdg-utils"
+    fi
+
+    DEBIAN_FRONTEND=noninteractive apt-get install -y $pkgs
     rm -rf /var/lib/apt/lists/*
 }
 

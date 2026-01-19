@@ -13,7 +13,7 @@ echo "Installing dependencies..."
 pnpm install
 
 echo "Building Tauri App..."
-pnpm tauri build --verbose
+pnpm tauri build
 
 check "binary exists" ls src-tauri/target/release/test-tauri-app
 
