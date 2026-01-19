@@ -1,0 +1,13 @@
+{
+    "name": "Tauri Dependencies",
+    "id": "tauri",
+    "version": "1.0.0",
+    "description": "Installs system dependencies required for Tauri v2 development.",
+    "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/tauri",
+    "options": {},
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/node",
+        "ghcr.io/devcontainers/features/rust"
+    ]
+}
