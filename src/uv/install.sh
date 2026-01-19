@@ -69,17 +69,16 @@ setup_autocompletion() {
     echo "Setting up UV autocompletion for $shell..."
     case "$shell" in
         bash|zsh)
-            # su - "${_REMOTE_USER:-root}" -c "uv generate-shell-completion $shell >> ~/.${shell}rc"
             su - "${_REMOTE_USER:-root}" -c "echo 'eval \"\$(uv generate-shell-completion $shell)\"' >> ~/.${shell}rc"
             su - "${_REMOTE_USER:-root}" -c "echo 'eval \"\$(uvx generate-shell-completion $shell)\"' >> ~/.${shell}rc"
             ;;
         fish)
-            # su - "${_REMOTE_USER:-root}" -c "uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish"
+            su - "${_REMOTE_USER:-root}" -c "mkdir -p ~/.config/fish/completions"
             su - "${_REMOTE_USER:-root}" -c "echo 'uv generate-shell-completion fish | source' >> ~/.config/fish/config.fish"
             su - "${_REMOTE_USER:-root}" -c "echo 'uvx generate-shell-completion fish | source' >> ~/.config/fish/config.fish"
             ;;
         elvish)
-            # su - "${_REMOTE_USER:-root}" -c "uv generate-shell-completion elvish >> ~/.elvish/rc.elv"
+            su - "${_REMOTE_USER:-root}" -c "mkdir -p ~/.elvish"
             su - "${_REMOTE_USER:-root}" -c "echo 'eval (uv generate-shell-completion elvish | slurp)' >> ~/.elvish/rc.elv"
             su - "${_REMOTE_USER:-root}" -c "echo 'eval (uvx generate-shell-completion elvish | slurp)' >> ~/.elvish/rc.elv"
             ;;
