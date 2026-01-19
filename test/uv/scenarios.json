@@ -1,0 +1,26 @@
+{
+    "latest": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "uv": {
+                "version": "latest"
+            }
+        }
+    },
+    "specific_version": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "uv": {
+                "version": "0.9.24"
+            }
+        }
+    },
+    "completion": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "uv": {
+                "completion_shell": "bash"
+            }
+        }
+    }
+}
