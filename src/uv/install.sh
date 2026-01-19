@@ -152,6 +152,10 @@ install_uv() {
 }
 
 init_autocompletion() {
+    if [ -z "$COMPLETION_SHELL" ] || [ "$COMPLETION_SHELL" = "none" ]; then
+        echo "Autocompletion setup skipped as per configuration."
+        return
+    fi
     local installed_shells
     installed_shells=($(detect_installed_shell))
     echo "Detected installed shells: ${installed_shells[*]}"
