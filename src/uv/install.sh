@@ -113,6 +113,7 @@ install_deps() {
     if command -v apt-get >/dev/null 2>&1; then
         apt-get update
         apt-get install -y curl ca-certificates
+        rm -rf /var/lib/apt/lists/*
     # YUM: RHEL/CentOS(older)
     elif command -v yum >/dev/null 2>&1; then
         yum install -y curl ca-certificates
