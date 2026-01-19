@@ -43,22 +43,25 @@ check_is_init_autocompletion() {
     local shell_name="$1"
     local remote_user_home
     remote_user_home=$(find_user_home)
+    local pattern
+    local profile_files=()
+
     case "$shell_name" in
         bash)
-            local pattern="uv generate-shell-completion bash"
-            local profile_files="${remote_user_home}/.bashrc ${remote_user_home}/.bash_profile ${remote_user_home}/.profile"
+            pattern="uv generate-shell-completion bash"
+            profile_files=("${remote_user_home}/.bashrc" "${remote_user_home}/.bash_profile" "${remote_user_home}/.profile")
             ;;
         zsh)
-            local pattern="uv generate-shell-completion zsh"
-            local profile_files="${remote_user_home}/.zshrc"
+            pattern="uv generate-shell-completion zsh"
+            profile_files=("${remote_user_home}/.zshrc")
             ;;
         fish)
-            local pattern="uv generate-shell-completion fish"
-            local profile_files="${remote_user_home}/.config/fish/completions/uv.fish"
+            pattern="uv generate-shell-completion fish"
+            profile_files=("${remote_user_home}/.config/fish/completions/uv.fish")
             ;;
         elvish)
-            local pattern="uv generate-shell-completion elvish"
-            local profile_files="${remote_user_home}/.elvish/rc.elv"
+            pattern="uv generate-shell-completion elvish"
+            profile_files=("${remote_user_home}/.elvish/rc.elv")
             ;;
         *)
             echo "Shell $shell_name is not supported for autocompletion initialization."
@@ -66,7 +69,7 @@ check_is_init_autocompletion() {
             ;;
     esac
 
-    for file in $profile_files; do
+    for file in "${profile_files[@]}"; do
         if [ -f "$file" ] && grep -Fq "$pattern" "$file"; then
             return 0
         fi
@@ -149,24 +152,26 @@ install_uv() {
 
 init_autocompletion() {
     local installed_shells
-    installed_shells=$(detect_installed_shell)
-    echo "Detected installed shells: $installed_shells"
+    installed_shells=($(detect_installed_shell))
+    echo "Detected installed shells: ${installed_shells[*]}"
 
-    local target_shells=""
+    local target_shells=()
     if [ "$COMPLETION_SHELL" = "automatic" ]; then
-        target_shells="$installed_shells"
+        target_shells=("${installed_shells[@]}")
     else
-        for shell in $installed_shells; do
-            for target in $(echo "$COMPLETION_SHELL" | tr ',' ' '); do
+        local completion_shells
+        IFS=',' read -r -a completion_shells <<< "$COMPLETION_SHELL"
+        for shell in "${installed_shells[@]}"; do
+            for target in "${completion_shells[@]}"; do
                 if [ "$shell" = "$target" ]; then
-                    target_shells="${target_shells} $shell"
+                    target_shells+=("$shell")
                 fi
             done
         done
     fi
-    echo "Target shells for autocompletion setup: $target_shells"
+    echo "Target shells for autocompletion setup: ${target_shells[*]}"
 
-    for shell in $target_shells; do
+    for shell in "${target_shells[@]}"; do
         if check_is_init_autocompletion "$shell"; then
             echo "Skipping autocompletion setup for $shell."
         else
