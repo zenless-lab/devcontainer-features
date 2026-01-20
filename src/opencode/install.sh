@@ -229,6 +229,7 @@ init_shell() {
     for shell in "${shells[@]}"; do
         case "$shell" in
             fish)
+                mkdir -p "$user_home/.config/fish"
                 add_to_path "$user_home/.config/fish/config.fish" "fish_add_path $install_dir"
                 ;;
             bash)
