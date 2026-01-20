@@ -178,6 +178,11 @@ add_to_path() {
     local config_file=$1
     local command=$2
 
+    if [ ! -f "$config_file" ]; then
+        touch "$config_file"
+        chown "$(id -u ${_REMOTE_USER}):$(id -g ${_REMOTE_USER})" "$config_file"
+    fi
+
     if grep -Fxq "$command" "$config_file"; then
         echo "Path already set in $config_file"
     elif [[ -w $config_file ]]; then
