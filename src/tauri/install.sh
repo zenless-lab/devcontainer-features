@@ -3,10 +3,23 @@
 set -euo pipefail
 
 
+# Detect the Linux distribution
+distro_detect() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        echo "$ID"
+    else
+        echo "unknown"
+    fi
+}
+
+
+# Install dependencies for Ubuntu/Debian
+# Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_apt() {
-    apt-get update
-    # if libwebkit2gtk-4.1-dev is not available (e.g. Ubuntu 20.04), fall back to libwebkit2gtk-4.0-dev
+    export DEBIAN_FRONTEND=noninteractive
     local pkgs="\
+        libwebkit2gtk-4.1-dev \
         build-essential \
         curl \
         wget \
@@ -14,26 +27,19 @@ install_deps_apt() {
         libxdo-dev \
         libssl-dev \
         libayatana-appindicator3-dev \
-        librsvg2-dev"
-
-    if apt-cache show libwebkit2gtk-4.1-dev >/dev/null 2>&1; then
-        pkgs="$pkgs libwebkit2gtk-4.1-dev"
-    else
-        pkgs="$pkgs libwebkit2gtk-4.0-dev libgtk-3-dev"
-    fi
-
-    if ! dpkg -s xdg-utils >/dev/null 2>&1; then
-        pkgs="$pkgs xdg-utils"
-    fi
-
-    DEBIAN_FRONTEND=noninteractive apt-get install -y $pkgs
+        librsvg2-dev \
+        xdg-utils \
+    "
+    apt-get update 
+    apt-get install -y $pkgs
     rm -rf /var/lib/apt/lists/*
 }
 
 
+# Install dependencies for Arch Linux
+# Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_pacman() {
-    pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed \
+    local pkgs="\
         webkit2gtk-4.1 \
         base-devel \
         curl \
@@ -43,37 +49,53 @@ install_deps_pacman() {
         appmenu-gtk-module \
         libappindicator-gtk3 \
         librsvg \
-        xdotool
+        xdotool \
+        xdg-utils \
+    "
+    pacman -Syu --noconfirm
+    pacman -S --noconfirm --needed $pkgs
 }
 
 
+# Install dependencies for Fedora/CentOS/RHEL
+# Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_dnf() {
-    dnf check-update || true
-    dnf install -y \
-        webkit2gtk4.1-devel \
+    local pkgs="\
+        webkit2gtk4.1-devel \    
         openssl-devel \
         curl \
         wget \
         file \
         libappindicator-gtk3-devel \
         librsvg2-devel \
-        libxdo-devel
+        libxdo-devel \
+        xdg-utils \
+    "
+    dnf check-update || true
+    dnf install -y $pkgs
     dnf group install -y "c-development"
 }
 
 
+# Install dependencies for Gentoo
+# Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_emerge() {
-    emerge --ask \
+    local pkgs="\"
         net-libs/webkit-gtk:4.1 \
         dev-libs/libappindicator \
         net-misc/curl \
         net-misc/wget \
-        sys-apps/file
+        sys-apps/file \
+        x11-misc/xdg-utils \
+    "
+    emerge --ask $pkgs
 }
 
 
+# Install dependencies for RPM-OSTree systems
+# Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_rpm_ostree() {
-    rpm-ostree install \
+    local pkgs="\
         webkit2gtk4.1-devel \
         openssl-devel \
         curl \
@@ -84,27 +106,38 @@ install_deps_rpm_ostree() {
         libxdo-devel \
         gcc \
         gcc-c++ \
-        make
+        make \
+        xdg-utils \
+    "
+    rpm-ostree install $pkgs
+
     echo "Please reboot the system to complete the installation."
 }
 
 
+# Install dependencies for OpenSUSE/SLES
+# Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_zypper() {
-    zypper up -y
-    zypper in -y \
+    local pkgs="\
         webkit2gtk3-devel \
         libopenssl-devel \
         curl \
         wget \
         file \
         libappindicator3-1 \
-        librsvg-devel
+        librsvg-devel \
+        xdg-utils \
+    "
+    zypper up -y
+    zypper in -y $pkgs
     zypper in -t pattern devel_basis
 }
 
 
+# Install dependencies for Alpine Linux
+# Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_apk() {
-    apk add --no-cache \
+    local pkgs="\
         build-base \
         webkit2gtk-4.1-dev \
         curl \
@@ -112,29 +145,45 @@ install_deps_apk() {
         file \
         openssl \
         libayatana-appindicator-dev \
-        librsvg
-}   
+        librsvg \
+        xdg-utils \
+    "
+    apk add --no-cache $pkgs
+}
 
 
+# Main installation function
 install_deps() {
-    if command -v apt-get >/dev/null 2>&1; then
-        install_deps_apt
-    elif command -v pacman >/dev/null 2>&1; then
-        install_deps_pacman
-    elif command -v dnf >/dev/null 2>&1; then
-        install_deps_dnf
-    elif command -v emerge >/dev/null 2>&1; then
-        install_deps_emerge
-    elif command -v rpm-ostree >/dev/null 2>&1; then
-        install_deps_rpm_ostree
-    elif command -v zypper >/dev/null 2>&1; then
-        install_deps_zypper
-    elif command -v apk >/dev/null 2>&1; then
-        install_deps_apk
-    else
-        echo "Unsupported package manager. Please install dependencies manually."
-        exit 1
-    fi
+    local distro
+    distro=$(distro_detect)
+    case "$distro" in
+        ubuntu|debian)
+            install_deps_apt
+            ;;
+        arch)
+            install_deps_pacman
+            ;;
+        fedora|centos|rhel)
+            install_deps_dnf
+            ;;
+        gentoo)
+            install_deps_emerge
+            ;;
+        almalinux|rocky)
+            install_deps_dnf
+            ;;
+        opensuse*|sles)
+            install_deps_zypper
+            ;;
+        alpine)
+            install_deps_apk
+            ;;
+        *)
+            echo "Unsupported or unknown distribution: $distro"
+            echo "Please install dependencies manually."
+            exit 1
+            ;;
+    esac
 }
 
 
