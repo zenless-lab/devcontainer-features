@@ -1,23 +1,27 @@
-# Micromamba Dev Container Feature
+# Micromamba (micromamba)
 
-This feature installs the Micromamba package manager, a tiny, pure C++ executable package manager.
+Installs Micromamba, a tiny, pure C++ executable package manager. It is a statically linked version of Mamba.
+
+## Feature Options
+
+| Option | Description | Value Type | Default Value |
+|---|---|---|---|
+| version | Select the version of Micromamba to install. | string | latest |
+| init_shells | Select the shell(s) to initialize, separated by commas. | string | bash |
+
+## Usage
+
+```json
+"features": {
+    "ghcr.io/zenless-lab/devcontainer-features/micromamba:1": {
+        "version": "latest",
+        "init_shells": "bash"
+    }
+}
+```
 
 ## Overview
 
 - **Installation**: Downloads the Micromamba binary directly from `micro.mamba.pm`.
 - **System Requirements**: Automatically installs dependencies (`curl`, `bzip2`, `ca-certificates`, `tar`) if missing.
 - **Initialization**: Configures shell integration for specified shells.
-
-## Scripts
-
-### `install.sh`
-
-The main entry point for the feature.
-
-1.  **`prepare_deps`**: Ensures `curl`, `bzip2`, `ca-certificates`, and `tar` are available. Supports various package managers (`apt`, `apk`, `dnf`, `yum`, `microdnf`, `zypper`).
-2.  **`install_micromamba`**: 
-    -   Determines the download URL based on the `version` option and system architecture.
-    -   Downloads and extracts the `micromamba` executable to `/usr/local/bin`.
-3.  **`init_shells`**:
-    -   Initializes shell integration (modifies rc files) for the specified shells (`bash`, `zsh`, `fish`).
-    -   Runs `micromamba shell init` as the remote user to ensure correct file permissions and home directory usage.
