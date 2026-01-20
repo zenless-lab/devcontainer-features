@@ -83,7 +83,7 @@ install_deps_emerge() {
         net-misc/curl
         app-misc/ca-certificates
     )
-    emerge --ask "${pkgs[@]}"
+    emerge --quiet "${pkgs[@]}"
 }
 
 
