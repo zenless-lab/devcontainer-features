@@ -8,6 +8,12 @@ SHELL_INIT=${SHELL_INIT:-"automatic"}
 
 INSTALL_SCRIPT_URL="https://opencode.ai/install"
 
+PKGS=(
+    sudo
+    curl
+    ca-certificates
+)
+
 
 # Detect user home directory
 detect_user_home() {
@@ -21,12 +27,7 @@ detect_user_home() {
 
 # Execute command as remote user if specified
 remote_user_do() {
-    local command=$1
-    if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
-        su - "${_REMOTE_USER}" -c "$command"
-    else
-        bash -c "$command"
-    fi
+    sudo -i -u "${_REMOTE_USER}" -- "$@"
 }
 
 
@@ -44,56 +45,41 @@ distro_detect() {
 # Install dependencies for Ubuntu/Debian
 install_deps_apt() {
     export DEBIAN_FRONTEND=noninteractive
-    local pkgs=(
-        curl
-        ca-certificates
-    )
     apt-get update
-    apt-get install -y "${pkgs[@]}"
+    apt-get install -y "${PKGS[@]}"
     rm -rf /var/lib/apt/lists/*
 }
 
 
 # Install dependencies for Arch Linux
 install_deps_pacman() {
-    local pkgs=(
-        curl
-        ca-certificates
-    )
     pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed "${pkgs[@]}"
+    pacman -S --noconfirm --needed "${PKGS[@]}"
 }
 
 
 # Install dependencies for Fedora/CentOS/RHEL
 install_deps_dnf() {
-    local pkgs=(
-        curl
-        ca-certificates
-    )
     dnf check-update || true
-    dnf install -y "${pkgs[@]}"
+    dnf install -y "${PKGS[@]}"
     dnf group install -y "c-development"
 }
 
 
 # Install dependencies for Gentoo
 install_deps_emerge() {
-    local pkgs=(
+    local emerge_pkgs=(
+        sudo
         net-misc/curl
         app-misc/ca-certificates
     )
-    emerge --quiet "${pkgs[@]}"
+    emerge --quiet "${emerge_pkgs[@]}"
 }
 
 
 # Install dependencies for RPM-OSTree systems
 install_deps_rpm_ostree() {
-    local pkgs=(
-        curl
-        ca-certificates
-    )
-    rpm-ostree install "${pkgs[@]}"
+    rpm-ostree install "${PKGS[@]}"
 
     echo "Please reboot the system to complete the installation."
 }
@@ -101,23 +87,15 @@ install_deps_rpm_ostree() {
 
 # Install dependencies for OpenSUSE/SLES
 install_deps_zypper() {
-    local pkgs=(
-        curl
-        ca-certificates
-    )
     zypper up -y
-    zypper in -y "${pkgs[@]}"
+    zypper in -y "${PKGS[@]}"
     zypper in -t pattern devel_basis
 }
 
 
 # Install dependencies for Alpine Linux
 install_deps_apk() {
-    local pkgs=(
-        curl
-        ca-certificates
-    )
-    apk add --no-cache "${pkgs[@]}"
+    apk add --no-cache "${PKGS[@]}"
 }
 
 
@@ -160,10 +138,10 @@ install_deps() {
 install_opencode() {
     echo "Installing OpenCode version: $OPENCODE_VERSION"
     if [ "$OPENCODE_VERSION" = "latest" ]; then
-        remote_user_do "curl -fsSL \"$INSTALL_SCRIPT_URL\" | bash -s -- --no-modify-path"
+        remote_user_do curl -fsSL "$INSTALL_SCRIPT_URL" | remote_user_do bash -s -- --no-modify-path
     else
         echo "specific version detected: $OPENCODE_VERSION"
-        remote_user_do "curl -fsSL \"$INSTALL_SCRIPT_URL\" | bash -s -- --version \"$OPENCODE_VERSION\" --no-modify-path"
+        remote_user_do curl -fsSL "$INSTALL_SCRIPT_URL" | remote_user_do bash -s -- --version "$OPENCODE_VERSION" --no-modify-path
     fi
 }
 
@@ -203,8 +181,10 @@ add_to_path() {
     if grep -Fxq "$command" "$config_file"; then
         echo "Path already set in $config_file"
     elif [[ -w $config_file ]]; then
-        remote_user_do "echo -e '\n# opencode' >> \"$config_file\""
-        remote_user_do "echo \"$command\" >> \"$config_file\""
+        remote_user_do echo -e "\n# opencode" >> "$config_file"
+        remote_user_do echo "$command" >> "$config_file"
+        chown "$(id -u ${_REMOTE_USER}):$(id -g ${_REMOTE_USER})" "$config_file"
+        echo "Added CMD to $config_file"
     else
         echo "CMD to add to $config_file:"
         echo "  $command"
