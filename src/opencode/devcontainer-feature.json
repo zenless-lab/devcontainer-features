@@ -1,0 +1,26 @@
+{
+    "id": "opencode",
+    "version": "1.0.0",
+    "name": "OpenCode",
+    "description": "Installs OpenCode CLI",
+    "options": {
+        "opencode_version": {
+            "type": "string",
+            "proposals": ["latest"],
+            "default": "latest",
+            "description": "Select the version to install."
+        },
+        "shell_init": {
+            "type": "string",
+            "proposals": [
+                "automatic",
+                "sh,bash"
+            ],
+            "default": "automatic",
+            "description": "Initialize shell completions for the specified shell(s). Comma-separated list of shells or 'automatic' to detect the current shell."
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
