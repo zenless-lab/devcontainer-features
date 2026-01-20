@@ -9,6 +9,15 @@
             "proposals": ["latest"],
             "default": "latest",
             "description": "Select the version to install."
+        },
+        "shell_init": {
+            "type": "string",
+            "proposals": [
+                "automatic",
+                "sh,bash"
+            ],
+            "default": "automatic",
+            "description": "Initialize shell completions for the specified shell(s). Comma-separated list of shells or 'automatic' to detect the current shell."
         }
     },
     "installsAfter": [
