@@ -59,6 +59,9 @@ jobs:
           # Micromamba not supported on alpine base image
           - features: micromamba
             baseImage: mcr.microsoft.com/devcontainers/base:alpine
+          # Tauri test uses nvm/node which has no binary for alpine
+          - features: tauri
+            baseImage: mcr.microsoft.com/devcontainers/base:alpine
     steps:
       - uses: actions/checkout@v4
 
