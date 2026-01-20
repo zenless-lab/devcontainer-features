@@ -1,0 +1,38 @@
+{
+    "debian": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "pkg": {
+                "pkg": "jq",
+                "apt": "zip"
+            }
+        }
+    },
+    "alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "pkg": {
+                "pkg": "jq",
+                "apk": "zip"
+            }
+        }
+    },
+    "fedora": {
+        "image": "fedora:latest",
+        "features": {
+            "pkg": {
+                "pkg": "jq",
+                "dnf": "zip"
+            }
+        }
+    },
+    "arch": {
+        "image": "archlinux:base",
+        "features": {
+            "pkg": {
+                "pkg": "jq",
+                "pacman": "zip"
+            }
+        }
+    }
+}
