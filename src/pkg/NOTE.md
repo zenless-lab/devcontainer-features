@@ -15,6 +15,7 @@ Installs system packages on various Linux distributions.
 | emerge | Comma-separated list of packages to install on Gentoo (emerge). | string | - |
 | rpm_ostree | Comma-separated list of packages to install via rpm-ostree. | string | - |
 | zypper | Comma-separated list of packages to install on openSUSE (zypper). | string | - |
+| zypper_pattern | Comma-separated list of patterns to install on openSUSE (zypper). | string | - |
 | apk | Comma-separated list of packages to install on Alpine Linux (apk). | string | - |
 | xbps | Comma-separated list of packages to install on Void Linux (xbps). | string | - |
 | nix | Comma-separated list of packages to install via Nix (nix-env). | string | - |
