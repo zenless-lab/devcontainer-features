@@ -18,6 +18,7 @@ distro_detect() {
 # Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_apt() {
     export DEBIAN_FRONTEND=noninteractive
+    # NOTE: Tauri v2 requires libwebkit2gtk-4.1-dev
     local pkgs="\
         libwebkit2gtk-4.1-dev \
         build-essential \
@@ -30,8 +31,8 @@ install_deps_apt() {
         librsvg2-dev \
         xdg-utils \
     "
-    apt-get update 
-    apt-get install -y $pkgs
+    apt-get update
+    apt-get install -y "$pkgs"
     rm -rf /var/lib/apt/lists/*
 }
 
@@ -53,7 +54,7 @@ install_deps_pacman() {
         xdg-utils \
     "
     pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed $pkgs
+    pacman -S --noconfirm --needed "$pkgs"
 }
 
 
@@ -61,7 +62,7 @@ install_deps_pacman() {
 # Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_dnf() {
     local pkgs="\
-        webkit2gtk4.1-devel \    
+        webkit2gtk4.1-devel \
         openssl-devel \
         curl \
         wget \
@@ -72,7 +73,7 @@ install_deps_dnf() {
         xdg-utils \
     "
     dnf check-update || true
-    dnf install -y $pkgs
+    dnf install -y "$pkgs"
     dnf group install -y "c-development"
 }
 
@@ -80,7 +81,7 @@ install_deps_dnf() {
 # Install dependencies for Gentoo
 # Compared to the official example, the `xdg-utils` dependency was added because stripped-down Docker images often lack `xdg-open`.
 install_deps_emerge() {
-    local pkgs="\"
+    local pkgs="\
         net-libs/webkit-gtk:4.1 \
         dev-libs/libappindicator \
         net-misc/curl \
@@ -88,7 +89,7 @@ install_deps_emerge() {
         sys-apps/file \
         x11-misc/xdg-utils \
     "
-    emerge --ask $pkgs
+    emerge --ask "$pkgs"
 }
 
 
@@ -109,7 +110,7 @@ install_deps_rpm_ostree() {
         make \
         xdg-utils \
     "
-    rpm-ostree install $pkgs
+    rpm-ostree install "$pkgs"
 
     echo "Please reboot the system to complete the installation."
 }
@@ -129,7 +130,7 @@ install_deps_zypper() {
         xdg-utils \
     "
     zypper up -y
-    zypper in -y $pkgs
+    zypper in -y "$pkgs"
     zypper in -t pattern devel_basis
 }
 
@@ -148,7 +149,7 @@ install_deps_apk() {
         librsvg \
         xdg-utils \
     "
-    apk add --no-cache $pkgs
+    apk add --no-cache "$pkgs"
 }
 
 
