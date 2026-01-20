@@ -1,0 +1,17 @@
+{
+    "id": "opencode",
+    "version": "1.0.0",
+    "name": "OpenCode",
+    "description": "Installs OpenCode CLI",
+    "options": {
+        "opencode_version": {
+            "type": "string",
+            "proposals": ["latest"],
+            "default": "latest",
+            "description": "Select the version to install."
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
