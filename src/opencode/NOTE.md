@@ -22,6 +22,6 @@ Installs OpenCode CLI.
 
 ## Overview
 
-- **Installation**: helper feature to install OpenCode CLI from opencode.ai.
+- **Installation**: Helper feature to install OpenCode CLI from opencode.ai.
 - **Dependencies**: Installs `sudo`, `curl`, `ca-certificates`.
 - **Initialization**: Configures shell completions if requested.
