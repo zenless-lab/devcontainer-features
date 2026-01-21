@@ -15,6 +15,7 @@ REPO_URL=${REPO_URL:-"automatic"}
 
 DEPS=(
     curl
+    ca-certificates
     perl
     xz-utils
     gzip
