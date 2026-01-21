@@ -6,7 +6,7 @@ Installs TeX Live, a comprehensive TeX system.
 
 | Option | Description | Value Type | Default Value |
 |---|---|---|---|
-| scheme | Select the TeX Live scheme to install. | string | scheme-full |
+| scheme | Select the TeX Live scheme to install. | string | full |
 | paper | Select the default paper size. | string | a4 |
 | doc_install | Install documentation. | boolean | true |
 | src_install | Install source files. | boolean | true |
