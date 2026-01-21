@@ -157,6 +157,8 @@ install_apk_deps() {
         py3-scipy
         aria2
         py3-matplotlib
+        tcl-dev
+        tk-dev
     )
     apk add --no-cache "${pkgs[@]}"
     pip3 install --break-system-packages astropy
