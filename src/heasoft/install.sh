@@ -227,7 +227,7 @@ install_heasoft() {
     ./configure --prefix="${INSTALL_DIR}"
 
     echo "Building HEASoft (this may take a long time)..."
-    make -j"$(nproc)" || make -j4 || make
+    make -j"$(nproc)"
 
     echo "Installing HEASoft..."
     make install
