@@ -150,6 +150,7 @@ download_install_script() {
     echo "Downloading TeX Live installation script..."
     rm -rf "${TEMP_DIR}"
     mkdir -p "${TEMP_DIR}"
+    update-ca-certificates
     curl -L -o "${TEMP_DIR}/install-tl-unx.tar.gz" "${INSTALL_SCRIPT_URL}"
     tar xf "${TEMP_DIR}/install-tl-unx.tar.gz" -C "${TEMP_DIR}" --strip-components=1
     echo "TeX Live installation script downloaded."
