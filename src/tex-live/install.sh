@@ -6,7 +6,7 @@ set -euo pipefail
 INSTALL_SCRIPT_URL="https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz"
 TEMP_DIR=/tmp/texlive
 
-SCHEME=${SCHEME:-"full"}
+SCHEME=${SCHEME:-"medium"}
 PAPER=${PAPER:-"a4"}
 DOC_INSTALL=${DOC_INSTALL}
 SRC_INSTALL=${SRC_INSTALL}
