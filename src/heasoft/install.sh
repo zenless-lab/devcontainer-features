@@ -222,7 +222,7 @@ install_heasoft() {
     fi
 
     cd "${source_dir}/BUILD_DIR"
-    ./configure --prefix="${INSTALL_DIR}" CFLAGS="-std=c99" CXXFLAGS="-std=c99"
+    ./configure --prefix="${INSTALL_DIR}" CFLAGS="-std=gnu89"
 
     echo "Building HEASoft (this may take a long time)..."
     make -j"$(nproc)" || make -j4 || make
