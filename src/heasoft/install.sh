@@ -90,6 +90,8 @@ install_dnf_deps() {
     dnf install -y "${pkgs[@]}"
     dnf install -y aria2 || echo "aria2 not found, skipping"
     dnf groupinstall -y "${grps[@]}"
+
+    pip3 install --break-system-packages scipy
 }
 
 
@@ -222,7 +224,7 @@ install_heasoft() {
     fi
 
     cd "${source_dir}/BUILD_DIR"
-    ./configure --prefix="${INSTALL_DIR}" CFLAGS="-std=gnu89"
+    ./configure --prefix="${INSTALL_DIR}"
 
     echo "Building HEASoft (this may take a long time)..."
     make -j"$(nproc)" || make -j4 || make
