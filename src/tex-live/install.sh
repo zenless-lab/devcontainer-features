@@ -82,6 +82,7 @@ install_dnf_deps() {
 install_apk_deps() {
     local apk_pkgs=(
         curl
+        ca-certificates
         perl
         xz
         gzip
