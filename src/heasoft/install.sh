@@ -13,6 +13,10 @@ export FC=/usr/bin/gfortran
 export PERL=/usr/bin/perl
 export PYTHON=/usr/bin/python3
 
+# Old C/C++ standards required for building HEASoft
+export CFLAGS="-std=gnu89 -fcommon"
+export CXXFLAGS="-std=gnu++98"
+
 
 # Detect the Linux distribution
 distro_detect() {
@@ -151,13 +155,13 @@ install_apk_deps() {
         python3-dev
         py3-pip
         py3-setuptools
-        py3-astropy
         py3-numpy
         py3-scipy
         aria2
         py3-matplotlib
     )
     apk add --no-cache "${pkgs[@]}"
+    pip3 install --break-system-packages astropy
 }
 
 
@@ -225,7 +229,7 @@ install_heasoft() {
     ./configure --prefix="${INSTALL_DIR}"
 
     echo "Building HEASoft (this may take a long time)..."
-    make -j"$(nproc)"
+    make -j"$(nproc)" || make -j4 || make
 
     echo "Installing HEASoft..."
     make install
