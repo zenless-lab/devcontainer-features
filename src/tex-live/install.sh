@@ -152,18 +152,12 @@ download_install_script() {
     mkdir -p "${TEMP_DIR}"
     curl -L -o "${TEMP_DIR}/install-tl-unx.tar.gz" "${INSTALL_SCRIPT_URL}"
     tar xf "${TEMP_DIR}/install-tl-unx.tar.gz" -C "${TEMP_DIR}" --strip-components=1
-    chmod -R +x "${TEMP_DIR}"
-    chown -R "$_REMOTE_USER" "${TEMP_DIR}"
     echo "TeX Live installation script downloaded."
 }
 
 
 install_texlive() {
     echo "Starting TeX Live installation..."
-
-    # Ensure target directory exists and is writable by the user
-    mkdir -p /usr/local/texlive
-    chown "$_REMOTE_USER" /usr/local/texlive
 
     local install_options=()
     install_options+=("--no-interaction")
