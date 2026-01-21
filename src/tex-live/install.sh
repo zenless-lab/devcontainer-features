@@ -8,8 +8,8 @@ TEMP_DIR=/tmp/texlive
 
 SCHEME=${SCHEME:-"medium"}
 PAPER=${PAPER:-"a4"}
-DOC_INSTALL=${DOC_INSTALL}
-SRC_INSTALL=${SRC_INSTALL}
+DOC_INSTALL=${DOC_INSTALL:-"true"}
+SRC_INSTALL=${SRC_INSTALL:-"true"}
 REPO_URL=${REPO_URL:-"automatic"}
 
 
@@ -20,7 +20,6 @@ DEPS=(
     xz-utils
     gzip
     tar
-    sudo
 )
 
 
@@ -82,7 +81,6 @@ install_apk_deps() {
         xz
         gzip
         tar
-        sudo
     )
     echo "Installing dependencies: ${apk_pkgs[*]}"
     apk add --no-cache "${apk_pkgs[@]}"
@@ -98,7 +96,7 @@ install_zypper_deps() {
 
 print_parameters() {
     echo "Installation parameters:"
-    echo "  Scheme:        ${SCHEME}"
+    echo "  Scheme:       ${SCHEME}"
     echo "  Paper size:   ${PAPER}"
     echo "  Doc install:  ${DOC_INSTALL}"
     echo "  Src install:  ${SRC_INSTALL}"
