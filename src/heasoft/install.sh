@@ -13,10 +13,6 @@ export FC=/usr/bin/gfortran
 export PERL=/usr/bin/perl
 export PYTHON=/usr/bin/python3
 
-# Old C/C++ standards required for building HEASoft
-export CFLAGS="-std=gnu89 -fcommon"
-export CXXFLAGS="-std=gnu++98"
-
 
 # Detect the Linux distribution
 distro_detect() {
@@ -226,7 +222,7 @@ install_heasoft() {
     fi
 
     cd "${source_dir}/BUILD_DIR"
-    ./configure --prefix="${INSTALL_DIR}"
+    ./configure --prefix="${INSTALL_DIR}" CFLAGS="-std=c99" CXXFLAGS="-std=c99"
 
     echo "Building HEASoft (this may take a long time)..."
     make -j"$(nproc)" || make -j4 || make
