@@ -24,11 +24,6 @@ DEPS=(
 )
 
 
-remote_user_do() {
-    sudo -i -u "$_REMOTE_USER" -- "$@"
-}
-
-
 get_remote_user_home() {
     if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
         echo "/home/${_REMOTE_USER}"
@@ -193,50 +188,29 @@ install_texlive() {
         install_options+=("--repository" "${REPO_URL}")
     fi
 
-    remote_user_do perl "${TEMP_DIR}/install-tl" "${install_options[@]}"
+    perl "${TEMP_DIR}/install-tl" "${install_options[@]}"
     echo "TeX Live installation completed."
 }
 
 
 post_install_configuration() {
     echo "Configuring TeX Live environment..."
-    
-    local texlive_year
-    texlive_year=$(ls /usr/local/texlive/ | grep -E '^[0-9]{4}$' | sort -r | head -n 1)
-    
-    if [ -z "${texlive_year}" ]; then
-        echo "Error: Could not determine TeX Live year. Installation might have failed."
-        exit 1
-    fi
 
-    local bin_root="/usr/local/texlive/${texlive_year}/bin"
-    local bin_dir=""
+    local year
+    year=$(ls /usr/local/texlive/ | grep -E '^[0-9]{4}$' | sort -r | head -n 1)
+    local platform
+    platform=$(ls /usr/local/texlive/"${year}"/bin/ | head -n 1)
+    local texlive_bin="/usr/local/texlive/${year}/bin/${platform}"
+    echo "TeX Live binary directory: ${texlive_bin}"
 
-    if [ -d "${bin_root}" ]; then
-        bin_dir=$(find "${bin_root}" -mindepth 1 -maxdepth 1 -type d | head -n 1)
-    fi
-    
-    if [ -z "${bin_dir}" ] || [ ! -d "${bin_dir}" ]; then
-        echo "Error: TeX Live binary directory not found in ${bin_root}"
-        exit 1
-    fi
+    # echo "export PATH=${texlive_bin}:\$PATH" > /etc/profile.d/texlive.sh
+    {
+        echo ""
+        echo "# TeX Live environment variables"
+        echo "export PATH=${texlive_bin}:\$PATH"
+    } > /etc/profile.d/texlive.sh
+    chmod +x /etc/profile.d/texlive.sh
 
-    echo "Found binary directory: ${bin_dir}"
-
-    # Add to path for the current session to use tlmgr
-    export PATH="${bin_dir}:$PATH"
-
-    # Create symlinks for tlmgr and other binaries
-    if command -v tlmgr >/dev/null 2>&1; then
-        echo "Creating symlinks for TeX Live binaries..."
-        tlmgr path add
-    else
-        echo "Warning: tlmgr not executable. Symlinks not created."
-    fi
-    # Persist PATH for future sessions
-    echo "export PATH=\"${bin_dir}:\$PATH\"" > /etc/profile.d/00-texlive.sh
-    chmod +x /etc/profile.d/00-texlive.sh
-    
     echo "TeX Live configuration completed."
 }
 
