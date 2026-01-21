@@ -1,0 +1,49 @@
+{
+    "name": "TeX Live",
+    "id": "tex-live",
+    "version": "1.0.0",
+    "description": "Installs TeX Live, a comprehensive TeX system.",
+    "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/tex-live",
+    "options": {
+        "scheme": {
+            "type": "string",
+            "proposals": [
+                "full",
+                "basic",
+                "medium",
+                "small",
+                "minimal",
+                "infraonly"
+            ],
+            "default": "medium",
+            "description": "Select the TeX Live scheme to install."
+        },
+        "paper": {
+            "type": "string",
+            "proposals": [
+                "a4",
+                "letter"
+            ],
+            "default": "a4",
+            "description": "Select the default paper size."
+        },
+        "doc_install": {
+            "type": "boolean",
+            "default": true,
+            "description": "Install documentation."
+        },
+        "src_install": {
+            "type": "boolean",
+            "default": true,
+            "description": "Install source files."
+        },
+        "repo_url": {
+            "type": "string",
+            "default": "automatic",
+            "description": "Custom CTAN repository URL."
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}

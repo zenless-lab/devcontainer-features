@@ -1,0 +1,16 @@
+{
+    "latest": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "tex-live": {}
+        }
+    },
+    "minimal": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "tex-live": {
+                "scheme": "minimal"
+            }
+        }
+    }
+}
