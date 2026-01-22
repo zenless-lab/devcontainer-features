@@ -82,16 +82,41 @@ install_dnf_deps() {
         perl-DirHandle
         perl-Env
         perl-File-Which
-        python3-astropy
-        python3-numpy
-        python3-matplotlib
     )
+    local pip_pkgs=()
+
+    if dnf list python3-scipy >/dev/null 2>&1; then
+        pkgs+=("python3-scipy")
+    else
+        pip_pkgs+=("scipy")
+    fi
+    if dnf list python3-astropy >/dev/null 2>&1; then
+        pkgs+=("python3-astropy")
+    else
+        pip_pkgs+=("astropy")
+    fi
+    if dnf list python3-numpy >/dev/null 2>&1; then
+        pkgs+=("python3-numpy")
+    else
+        pip_pkgs+=("numpy")
+    fi
+    if dnf list python3-matplotlib >/dev/null 2>&1; then
+        pkgs+=("python3-matplotlib")
+    else
+        pip_pkgs+=("matplotlib")
+    fi
+
+    if dnf list aria2 >/dev/null 2>&1; then
+        pkgs+=("aria2")
+    else
+        pkgs+=("curl")
+    fi
+
     dnf check-update || true
     dnf install -y "${pkgs[@]}"
-    dnf install -y aria2 || echo "aria2 not found, skipping"
     dnf groupinstall -y "${grps[@]}"
 
-    pip3 install --break-system-packages scipy
+    pip3 install --break-system-packages "${pip_pkgs[@]}"
 }
 
 
