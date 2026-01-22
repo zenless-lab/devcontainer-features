@@ -207,10 +207,10 @@ download_heasoft() {
     echo "Downloading HEASoft ${VERSION}..."
     if command -v aria2c >/dev/null 2>&1; then
         echo "Using aria2c for multi-threaded download..."
-        aria2c -x 16 -s 32 "${src_url}" -d "${TMP_DIR}" -o "heasoft.tar.gz"
+        aria2c --max-retries=5 -x 16 -s 32 "${src_url}" -d "${TMP_DIR}" -o "heasoft.tar.gz"
     else
         echo "aria2c not found, falling back to curl..."
-        curl -Lf "${src_url}" -o "${TMP_DIR}/heasoft.tar.gz"
+        curl --retry 5 -Lf "${src_url}" -o "${TMP_DIR}/heasoft.tar.gz"
     fi
 
     echo "Extracting HEASoft..."
