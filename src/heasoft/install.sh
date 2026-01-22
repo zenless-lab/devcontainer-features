@@ -67,22 +67,28 @@ install_pacman_deps() {
 
 
 install_dnf_deps() {
-    local grps=(
-        "Development Tools"
-        "Perl Development"
-        "Python Development"
-    )
     local pkgs=(
-        readline-devel
-        ncurses-devel
-        zlib-devel
-        libcurl-devel
-        libXt-devel
-        perl-Devel-CheckLib
-        perl-DirHandle
-        perl-Env
-        perl-File-Which
-        python3-numpy
+        redhat-rpm-config 
+        readline-devel 
+        ncurses-devel 
+        zlib-devel 
+        libcurl-devel 
+        libXt-devel 
+        make 
+        gcc 
+        gcc-c++ 
+        gcc 
+        gcc-gfortran 
+        perl-devel 
+        perl-Devel-CheckLib 
+        perl-DirHandle 
+        perl-Env 
+        perl-ExtUtils-MakeMaker 
+        perl-File-Which 
+        python3-devel 
+        # python3-astropy 
+        python3-numpy 
+        # python3-matplotlib
     )
     local pip_pkgs=(
         scipy
@@ -99,13 +105,6 @@ install_dnf_deps() {
     dnf check-update || true
 
     dnf install -y "${pkgs[@]}"
-    # dnf groupinstall -y "${grps[@]}"
-    if dnf --version | grep -q 'dnf5'; then
-        dnf group install -y "${grps[@]}"
-    else
-        dnf groupinstall -y "${grps[@]}"
-    fi
-
     pip3 install --break-system-packages "${pip_pkgs[@]}"
 }
 
