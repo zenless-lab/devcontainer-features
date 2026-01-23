@@ -254,7 +254,7 @@ install_heasoft() {
 
 setup_environment() {
     echo "Setting up environment variables..."
-    local headas_init=$(ls -d "${INSTALL_DIR}/*/headas-init.sh" | head -n 1)
+    local headas_init=$(ls -d ${INSTALL_DIR}/*/headas-init.sh | head -n 1)
     if [ -z "${headas_init}" ]; then
         echo "Error: headas-init.sh not found. Installation might have failed."
         exit 1
