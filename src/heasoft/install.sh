@@ -263,9 +263,15 @@ setup_environment() {
 
     {
         echo "export HEADAS=${headas_dir}"
-        echo 'source $HEADAS/headas-init.sh'
+        echo '. $HEADAS/headas-init.sh'
     } > /etc/profile.d/heasoft.sh
     chmod +x /etc/profile.d/heasoft.sh
+
+    {
+        echo "setenv HEADAS ${headas_dir}"
+        echo 'source $HEADAS/headas-init.csh'
+    } > /etc/profile.d/heasoft.csh
+    chmod +x /etc/profile.d/heasoft.csh
 }
 
 
