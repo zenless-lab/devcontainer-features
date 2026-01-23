@@ -173,7 +173,7 @@ install_apk_deps() {
         py3-matplotlib
         tcl-dev
         tk-dev
-        tcl-readline
+        "tcl-readline~=2.1.0"
     )
     apk add --no-cache "${pkgs[@]}"
     pip3 install --break-system-packages astropy
