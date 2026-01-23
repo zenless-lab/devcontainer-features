@@ -176,8 +176,7 @@ install_apk_deps() {
         tcl-readline
     )
     apk add --no-cache "${pkgs[@]}"
-    export LIBRARY_PATH=/usr/lib/tclreadline2.1.0:$LIBRARY_PATH
-    export LDFLAGS="-L/usr/lib/tclreadline2.1.0 $LDFLAGS"
+    ln -sf /usr/lib/tclreadline2.1.0/libtclreadline-2.1.0.so /usr/lib/libtclreadline-2.1.0.so
     pip3 install --break-system-packages astropy
 }
 
