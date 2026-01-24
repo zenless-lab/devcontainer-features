@@ -176,16 +176,15 @@ install_apk_deps() {
         tcl-readline
     )
     apk add --no-cache "${pkgs[@]}"
-    
+
+    # HACK: Linker fix: Alpine APK lacks libtclreadline.so.2.1.0. 
+    #     Creating a symbolic link from the system-provided version to trick the HEASoft 'make' process.
     if [ ! -e '/usr/lib/libtclreadline-2.1.0.so' ]; then
         local source
         source=$(ls /usr/lib/libtclreadline-*.so 2>/dev/null | sort -V | tail -n 1)
         echo "Target missing. Creating symlink: ${source} -> /usr/lib/libtclreadline-2.1.0.so"
         ln -s "${source}" /usr/lib/libtclreadline-2.1.0.so
     fi
-    
-    ls -l /usr/lib | grep libtclreadline
-    exit 1
     pip3 install --break-system-packages astropy
 }
 
