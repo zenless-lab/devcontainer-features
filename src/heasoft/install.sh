@@ -173,10 +173,18 @@ install_apk_deps() {
         py3-matplotlib
         tcl-dev
         tk-dev
-        tcl-readline=~2.1.0
+        tcl-readline
     )
     apk add --no-cache "${pkgs[@]}"
-    ls -l /usr/lib
+    
+    if [ ! -e '/usr/lib/libtclreadline-2.1.0.so' ]; then
+        local source
+        source=$(ls /usr/lib/libtclreadline-*.so 2>/dev/null | sort -V | tail -n 1)
+        echo "Target missing. Creating symlink: ${source} -> /usr/lib/libtclreadline-2.1.0.so"
+        ln -s "${source}" /usr/lib/libtclreadline-2.1.0.so
+    fi
+    
+    ls -l /usr/lib | grep libtclreadline
     exit 1
     pip3 install --break-system-packages astropy
 }
