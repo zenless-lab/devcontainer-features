@@ -1,0 +1,20 @@
+{
+    "name": "HEASoft",
+    "id": "heasoft",
+    "version": "1.0.0",
+    "description": "Installs HEASoft (High Energy Astrophysics Science Archive Research Center).",
+    "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/heasoft",
+    "options": {
+        "version": {
+            "type": "string",
+            "proposals": [
+                "6.36"
+            ],
+            "default": "6.36",
+            "description": "Select the version of HEASoft to install."
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
