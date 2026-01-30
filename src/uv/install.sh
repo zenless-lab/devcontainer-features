@@ -193,7 +193,7 @@ setup_autocompletion() {
     case "$shell" in
         bash|zsh)
             echo 'eval "$(uv generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
-            echo 'eval "$(uvx generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
+            echo 'eval "$(uvx --generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
             chown "${_REMOTE_USER:-root}": "$(find_user_home)/.${shell}rc"
             ;;
         fish)
@@ -201,7 +201,7 @@ setup_autocompletion() {
                 mkdir -p "$(find_user_home)/.config/fish/completions"
             fi
             echo 'uv generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
-            echo 'uvx generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
+            echo 'uvx --generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
             chown -R "${_REMOTE_USER:-root}": "$(find_user_home)/.config"
             ;;
         elvish)
@@ -209,7 +209,7 @@ setup_autocompletion() {
                 mkdir -p "$(find_user_home)/.elvish"
             fi
             echo 'eval (uv generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
-            echo 'eval (uvx generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
+            echo 'eval (uvx --generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
             chown -R "${_REMOTE_USER:-root}": "$(find_user_home)/.elvish"
             ;;
         *)
