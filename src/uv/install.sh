@@ -194,7 +194,7 @@ setup_autocompletion() {
         bash|zsh)
             echo 'eval "$(uv generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
             echo 'eval "$(uvx generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
-            chown "${_REMOTE_USER:-root}":"${_REMOTE_USER:-root}" "$(find_user_home)/.${shell}rc"
+            chown "${_REMOTE_USER:-root}": "$(find_user_home)/.${shell}rc"
             ;;
         fish)
             if [ ! -d "$(find_user_home)/.config/fish/completions" ]; then
@@ -202,7 +202,7 @@ setup_autocompletion() {
             fi
             echo 'uv generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
             echo 'uvx generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
-            chown -R "${_REMOTE_USER:-root}":"${_REMOTE_USER:-root}" "$(find_user_home)/.config"
+            chown -R "${_REMOTE_USER:-root}": "$(find_user_home)/.config"
             ;;
         elvish)
             if [ ! -d "$(find_user_home)/.elvish" ]; then
@@ -210,7 +210,7 @@ setup_autocompletion() {
             fi
             echo 'eval (uv generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
             echo 'eval (uvx generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
-            chown -R "${_REMOTE_USER:-root}":"${_REMOTE_USER:-root}" "$(find_user_home)/.elvish"
+            chown -R "${_REMOTE_USER:-root}": "$(find_user_home)/.elvish"
             ;;
         *)
             echo "Shell $shell is not supported for autocompletion setup."
@@ -284,8 +284,8 @@ install_python_versions() {
 
     if [ "$versions_raw" != "automatic" ]; then
         local versions=()
-        IFS=',' read -r -a version <<< "$versions_raw"
-        remote_user_do $uv_command python install ${version[*]}
+        IFS=',' read -r -a versions <<< "$versions_raw"
+        remote_user_do $uv_command python install "${versions[@]}"
         return
     else
         remote_user_do $uv_command python install
