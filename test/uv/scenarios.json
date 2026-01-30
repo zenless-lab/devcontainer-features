@@ -22,5 +22,13 @@
                 "completion_shell": "bash"
             }
         }
+    },
+    "python_versions": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "uv": {
+                "python_versions": "3.10,3.11,3.12"
+            }
+        }
     }
 }

@@ -7,6 +7,19 @@ echo "Starting UV installation script..."
 
 UV_VERSION="${VERSION:-latest}"
 COMPLETION_SHELL="${COMPLETION_SHELL:-automatic}"
+PYTHON_VERSIONS="${PYTHON_VERSIONS:-automatic}"
+
+uv_command=""
+
+
+# Execute command as remote user if specified
+remote_user_do() {
+    if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
+        sudo -i -u "${_REMOTE_USER}" -- "$@"
+    else
+        "$@"
+    fi
+}
 
 
 find_user_home() {
@@ -15,6 +28,102 @@ find_user_home() {
     else
         echo "/root"
     fi
+}
+
+
+# Detect the Linux distribution
+distro_detect() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        echo "$ID"
+    else
+        echo "unknown"
+    fi
+}
+
+
+# Install dependencies for Ubuntu/Debian
+install_deps_apt() {
+    export DEBIAN_FRONTEND=noninteractive
+    local pkgs=(
+        sudo
+        curl
+        ca-certificates
+    )
+    apt-get update
+    apt-get install -y "${pkgs[@]}"
+    rm -rf /var/lib/apt/lists/*
+}
+
+
+# Install dependencies for Arch Linux
+install_deps_pacman() {
+    local pkgs=(
+        sudo
+        curl
+        ca-certificates
+    )
+    pacman -Syu --noconfirm
+    pacman -S --noconfirm --needed "${pkgs[@]}"
+}
+
+
+# Install dependencies for Fedora/CentOS/RHEL
+install_deps_dnf() {
+    local pkgs=(
+        sudo
+        curl
+        ca-certificates
+    )
+    dnf check-update || true
+    dnf install -y "${pkgs[@]}"
+}
+
+
+# Install dependencies for Gentoo
+install_deps_emerge() {
+    local pkgs=(
+        app-admin/sudo
+        net-misc/curl
+        app-misc/ca-certificates
+    )
+    emerge --quiet "${pkgs[@]}"
+}
+
+
+# Install dependencies for RPM-OSTree systems
+install_deps_rpm_ostree() {
+    local pkgs=(
+        sudo
+        curl
+        ca-certificates
+    )
+    rpm-ostree install "${pkgs[@]}"
+
+    echo "Please reboot the system to complete the installation."
+}
+
+
+# Install dependencies for OpenSUSE/SLES
+install_deps_zypper() {
+    local pkgs=(
+        sudo
+        curl
+        ca-certificates
+    )
+    zypper up -y
+    zypper in -y "${pkgs[@]}"
+}
+
+
+# Install dependencies for Alpine Linux
+install_deps_apk() {
+    local pkgs=(
+        sudo
+        curl
+        ca-certificates
+    )
+    apk add --no-cache "${pkgs[@]}"
 }
 
 
@@ -83,18 +192,25 @@ setup_autocompletion() {
     echo "Setting up UV autocompletion for $shell..."
     case "$shell" in
         bash|zsh)
-            su - "${_REMOTE_USER:-root}" -c "echo 'eval \"\$(uv generate-shell-completion $shell)\"' >> ~/.${shell}rc"
-            su - "${_REMOTE_USER:-root}" -c "echo 'eval \"\$(uvx generate-shell-completion $shell)\"' >> ~/.${shell}rc"
+            echo 'eval "$(uv generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
+            echo 'eval "$(uvx generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
+            chown "${_REMOTE_USER:-root}": "$(find_user_home)/.${shell}rc"
             ;;
         fish)
-            su - "${_REMOTE_USER:-root}" -c "mkdir -p ~/.config/fish/completions"
-            su - "${_REMOTE_USER:-root}" -c "echo 'uv generate-shell-completion fish | source' >> ~/.config/fish/config.fish"
-            su - "${_REMOTE_USER:-root}" -c "echo 'uvx generate-shell-completion fish | source' >> ~/.config/fish/config.fish"
+            if [ ! -d "$(find_user_home)/.config/fish/completions" ]; then
+                mkdir -p "$(find_user_home)/.config/fish/completions"
+            fi
+            echo 'uv generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
+            echo 'uvx generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
+            chown -R "${_REMOTE_USER:-root}": "$(find_user_home)/.config"
             ;;
         elvish)
-            su - "${_REMOTE_USER:-root}" -c "mkdir -p ~/.elvish"
-            su - "${_REMOTE_USER:-root}" -c "echo 'eval (uv generate-shell-completion elvish | slurp)' >> ~/.elvish/rc.elv"
-            su - "${_REMOTE_USER:-root}" -c "echo 'eval (uvx generate-shell-completion elvish | slurp)' >> ~/.elvish/rc.elv"
+            if [ ! -d "$(find_user_home)/.elvish" ]; then
+                mkdir -p "$(find_user_home)/.elvish"
+            fi
+            echo 'eval (uv generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
+            echo 'eval (uvx generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
+            chown -R "${_REMOTE_USER:-root}": "$(find_user_home)/.elvish"
             ;;
         *)
             echo "Shell $shell is not supported for autocompletion setup."
@@ -103,36 +219,42 @@ setup_autocompletion() {
 }
 
 install_deps() {
-    if command -v curl >/dev/null 2>&1; then
+    if command -v curl >/dev/null 2>&1 && command -v sudo >/dev/null 2>&1; then
         echo "Dependencies already installed."
         return
     fi
 
     echo "Installing dependencies for UV..."
-    # APT: Debian/Ubuntu
-    if command -v apt-get >/dev/null 2>&1; then
-        apt-get update
-        apt-get install -y curl ca-certificates
-        rm -rf /var/lib/apt/lists/*
-    # YUM: RHEL/CentOS(older)
-    elif command -v yum >/dev/null 2>&1; then
-        yum install -y curl ca-certificates
-    # DNF: Fedora/CentOS(newer)
-    elif command -v dnf >/dev/null 2>&1; then
-        dnf install -y curl ca-certificates
-    # Zypper: openSUSE/SLE
-    elif command -v zypper >/dev/null 2>&1; then
-        zypper install -y curl ca-certificates
-    # Pacman: Arch Linux
-    elif command -v pacman >/dev/null 2>&1; then
-        pacman -Sy --noconfirm curl ca-certificates
-    # APK: Alpine Linux
-    elif command -v apk >/dev/null 2>&1; then
-        apk add --no-cache curl ca-certificates
-    else
-        echo "No supported package manager found. Please install curl and ca-certificates manually."
-        exit 1
-    fi
+    local distro
+    distro=$(distro_detect)
+    case "$distro" in
+        ubuntu|debian)
+            install_deps_apt
+            ;;
+        arch)
+            install_deps_pacman
+            ;;
+        fedora|centos|rhel)
+            install_deps_dnf
+            ;;
+        gentoo)
+            install_deps_emerge
+            ;;
+        almalinux|rocky)
+            install_deps_dnf
+            ;;
+        opensuse*|sles)
+            install_deps_zypper
+            ;;
+        alpine)
+            install_deps_apk
+            ;;
+        *)
+            echo "Unsupported or unknown distribution: $distro"
+            echo "Please install dependencies manually."
+            exit 1
+            ;;
+    esac
 }
 
 install_uv() {
@@ -147,8 +269,27 @@ install_uv() {
         download_url="https://astral.sh/uv/${version}/install.sh"
     fi
     echo "Downloading and running UV installer from $download_url ..."
-    su - "${_REMOTE_USER:-root}" -c "curl -LsSf '$download_url' | sh"
+    curl -LsSf "$download_url" | remote_user_do sh
+    uv_command="$(find_user_home)/.local/bin/uv"
     echo "UV installation completed."
+}
+
+install_python_versions() {
+    local versions_raw="$PYTHON_VERSIONS"
+
+    if [ -z "$versions_raw" ]; then
+        echo "Python installation skipped: empty version string."
+        return
+    fi
+
+    if [ "$versions_raw" != "automatic" ]; then
+        local versions=()
+        IFS=',' read -r -a versions <<< "$versions_raw"
+        remote_user_do $uv_command python install "${versions[@]}"
+        return
+    else
+        remote_user_do $uv_command python install
+    fi
 }
 
 init_autocompletion() {
@@ -188,6 +329,7 @@ init_autocompletion() {
 # Main installation flow
 install_deps
 install_uv
+install_python_versions
 init_autocompletion
 
 echo "UV installation script completed."
