@@ -16,6 +16,7 @@ An extremely fast Python package installer and resolver, written in Rust.
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
 | version | Select the version of uv to install. | string | latest |
+| python_versions | Install Python versions using 'uv python install'. Comma-separated values; use 'automatic' to install the default Python with no arguments. | string | automatic |
 | completion_shell | Install autocompletion for a specific shell, or try to detect automatically. | string | automatic |
 
 
