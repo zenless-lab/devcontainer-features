@@ -270,7 +270,7 @@ install_uv() {
     fi
     echo "Downloading and running UV installer from $download_url ..."
     curl -LsSf "$download_url" | remote_user_do sh
-    uv_command="$(su - "${_REMOTE_USER:-root}" -c "echo \$HOME")/.local/bin"/uv
+    uv_command="$(find_user_home)/.local/bin/uv"
     echo "UV installation completed."
 }
 
