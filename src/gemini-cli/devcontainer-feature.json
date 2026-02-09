@@ -1,0 +1,21 @@
+{
+    "id": "gemini-cli",
+    "version": "1.0.0",
+    "name": "Gemini CLI",
+    "description": "Installs Google Gemini CLI.",
+    "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/gemini-cli",
+    "options": {
+        "gemini_cli_version": {
+            "type": "string",
+            "proposals": [
+                "latest"
+            ],
+            "default": "latest",
+            "description": "Select the Gemini CLI version to install."
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/node"
+    ]
+}

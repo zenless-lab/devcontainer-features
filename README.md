@@ -9,6 +9,7 @@ This repository contains a collection of dev container Features.
 | [Mamba](src/mamba) | `mamba` | Installs Mamba, a fast, robust, and cross-platform package manager. |
 | [Micromamba](src/micromamba) | `micromamba` | Installs Micromamba, a tiny, pure C++ executable package manager. |
 | [OpenCode](src/opencode) | `opencode` | Installs OpenCode CLI. |
+| [Gemini CLI](src/gemini-cli) | `gemini-cli` | Installs Google Gemini CLI. |
 | [System Packages](src/pkg) | `pkg` | Installs system packages on various Linux distributions. |
 | [Tauri Dependencies](src/tauri) | `tauri` | Installs system dependencies required for Tauri v2 development. |
 | [uv](src/uv) | `uv` | An extremely fast Python package installer and resolver, written in Rust. |
@@ -52,6 +53,7 @@ ghcr.io/zenless-lab/devcontainer-features/pkg:1
 
 ```
 ├── src
+│   ├── gemini-cli
 │   ├── mamba
 │   ├── micromamba
 │   ├── opencode
