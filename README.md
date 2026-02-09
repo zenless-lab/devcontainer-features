@@ -7,7 +7,7 @@ This repository contains a collection of dev container Features.
 | Feature | Id | Description |
 |---|---|---|
 | [Gemini CLI](src/gemini-cli) | `gemini-cli` | Installs Google Gemini CLI. |
-| [HEASoft](src/heasoft) | `heasoft` | Installs HEASoft (High Energy Astrophysics Science Archive Research Center). |
+| [HEASoft](src/heasoft) | `heasoft` | Installs HEASoft, the HEASARC high-energy astrophysics software suite. |
 | [Mamba](src/mamba) | `mamba` | Installs Mamba, a fast, robust, and cross-platform package manager. |
 | [Micromamba](src/micromamba) | `micromamba` | Installs Micromamba, a tiny, pure C++ executable package manager. |
 | [OpenCode](src/opencode) | `opencode` | Installs OpenCode CLI. |
