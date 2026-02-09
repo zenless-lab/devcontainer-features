@@ -39,27 +39,6 @@ resolve_pnpm_home() {
 }
 
 
-# Resolve PNPM binary path
-resolve_pnpm_bin() {
-	local pnpm_home=$(resolve_pnpm_home)
-	if command -v pnpm >/dev/null 2>&1; then
-		echo "pnpm"
-		return
-	fi
-	if [ -x "$pnpm_home/pnpm" ]; then
-		echo "$pnpm_home/pnpm"
-		return
-	fi
-	local tools_bin
-	tools_bin=$(find "$pnpm_home/.tools/pnpm-exe" -maxdepth 2 -type f -name pnpm 2>/dev/null | head -n 1 || true)
-	if [ -n "$tools_bin" ]; then
-		echo "$tools_bin"
-		return
-	fi
-	return 1
-}
-
-
 # Detect the Linux distribution
 distro_detect() {
 	if [ -f /etc/os-release ]; then
