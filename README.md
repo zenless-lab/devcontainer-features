@@ -6,12 +6,14 @@ This repository contains a collection of dev container Features.
 
 | Feature | Id | Description |
 |---|---|---|
+| [Gemini CLI](src/gemini-cli) | `gemini-cli` | Installs Google Gemini CLI. |
+| [HEASoft](src/heasoft) | `heasoft` | Installs HEASoft (High Energy Astrophysics Science Archive Research Center). |
 | [Mamba](src/mamba) | `mamba` | Installs Mamba, a fast, robust, and cross-platform package manager. |
 | [Micromamba](src/micromamba) | `micromamba` | Installs Micromamba, a tiny, pure C++ executable package manager. |
 | [OpenCode](src/opencode) | `opencode` | Installs OpenCode CLI. |
-| [Gemini CLI](src/gemini-cli) | `gemini-cli` | Installs Google Gemini CLI. |
 | [System Packages](src/pkg) | `pkg` | Installs system packages on various Linux distributions. |
 | [Tauri Dependencies](src/tauri) | `tauri` | Installs system dependencies required for Tauri v2 development. |
+| [TeX Live](src/tex-live) | `tex-live` | Installs TeX Live, a comprehensive TeX system. |
 | [uv](src/uv) | `uv` | An extremely fast Python package installer and resolver, written in Rust. |
 
 ## Usage
@@ -54,11 +56,13 @@ ghcr.io/zenless-lab/devcontainer-features/pkg:1
 ```
 ├── src
 │   ├── gemini-cli
+│   ├── heasoft
 │   ├── mamba
 │   ├── micromamba
 │   ├── opencode
 │   ├── pkg
 │   ├── tauri
+│   ├── tex-live
 │   ├── uv
 ...
 ```
