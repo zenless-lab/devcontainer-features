@@ -224,7 +224,14 @@ install_pnpm() {
 # Install Node.js using PNPM
 install_node() {
 	echo "Installing Node.js version: lts"
-	remote_user_do pnpm env use --global lts
+    local distro
+    distro=$(distro_detect)
+    if [ "$distro" = "alpine" ]; then
+        echo "Installing Node.js from Alpine repository"
+        apk add --no-cache nodejs npm
+    else
+	    remote_user_do pnpm env use --global lts
+    fi
 }
 
 
