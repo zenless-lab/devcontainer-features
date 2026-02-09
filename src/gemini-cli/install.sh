@@ -207,17 +207,20 @@ configure_pnpm_path() {
 
 # Install PNPM
 install_pnpm() {
-	if command -v pnpm >/dev/null 2>&1; then
-		echo "pnpm already installed. Skipping pnpm installation."
+	# Check pnpm availability in the remote user context, since pnpm will be
+	# invoked via remote_user_do later (e.g., in install_node/install_gemini_cli).
+	if remote_user_do pnpm --version >/dev/null 2>&1; then
+		echo "pnpm already installed for remote user. Skipping pnpm installation."
 		return 0
 	fi
-	local pnpm_home=$(resolve_pnpm_home)
+	local pnpm_home
+	pnpm_home=$(resolve_pnpm_home)
 
 	echo "Installing latest pnpm version"
 	remote_user_do env PNPM_HOME="$pnpm_home" PATH="$pnpm_home:$PATH" \
 		bash -c "curl -fsSL https://get.pnpm.io/install.sh | bash -"
-    export PNPM_HOME="$pnpm_home"
-    export PATH="$PNPM_HOME:$PATH"
+	export PNPM_HOME="$pnpm_home"
+	export PATH="$PNPM_HOME:$PATH"
 }
 
 
