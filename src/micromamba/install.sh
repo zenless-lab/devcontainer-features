@@ -3,25 +3,153 @@ set -euo pipefail
 
 INIT_SHELLS="${INITSHELLS:-bash}"
 
+
+# Execute command as remote user if specified
+remote_user_do() {
+    if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
+        sudo -i -u "${_REMOTE_USER}" -- "$@"
+    else
+        "$@"
+    fi
+}
+
+
+# Detect the Linux distribution
+distro_detect() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        echo "$ID"
+    else
+        echo "unknown"
+    fi
+}
+
+
+# Install dependencies for Ubuntu/Debian
+install_deps_apt() {
+    export DEBIAN_FRONTEND=noninteractive
+    local pkgs=(
+        curl
+        bzip2
+        ca-certificates
+        tar
+        sudo
+    )
+    apt-get update
+    apt-get install -y "${pkgs[@]}"
+    rm -rf /var/lib/apt/lists/*
+}
+
+
+# Install dependencies for Arch Linux
+install_deps_pacman() {
+    local pkgs=(
+        curl
+        bzip2
+        ca-certificates
+        tar
+        sudo
+    )
+    pacman -Syu --noconfirm
+    pacman -S --noconfirm --needed "${pkgs[@]}"
+}
+
+
+# Install dependencies for Fedora/CentOS/RHEL and compatibles
+install_deps_dnf() {
+    local pkgs=(
+        curl
+        bzip2
+        ca-certificates
+        tar
+        sudo
+    )
+    if command -v dnf > /dev/null 2>&1; then
+        dnf check-update || true
+        dnf install -y "${pkgs[@]}"
+    elif command -v yum > /dev/null 2>&1; then
+        yum install -y "${pkgs[@]}"
+    elif command -v microdnf > /dev/null 2>&1; then
+        microdnf install -y "${pkgs[@]}"
+    else
+        echo "Neither dnf/yum/microdnf is available to install dependencies."
+        exit 1
+    fi
+}
+
+
+# Install dependencies for OpenSUSE/SLES
+install_deps_zypper() {
+    local pkgs=(
+        curl
+        bzip2
+        ca-certificates
+        tar
+        sudo
+    )
+    zypper refresh
+    zypper install -y "${pkgs[@]}"
+}
+
+
+# Install dependencies for Alpine Linux
+install_deps_apk() {
+    local pkgs=(
+        curl
+        bzip2
+        ca-certificates
+        tar
+        sudo
+    )
+    apk add --no-cache "${pkgs[@]}"
+}
+
+
+# Install dependencies for microdnf-based images
+install_deps_microdnf() {
+    local pkgs=(
+        curl
+        bzip2
+        ca-certificates
+        tar
+        sudo
+    )
+    microdnf install -y "${pkgs[@]}"
+}
+
 prepare_deps() {
-    if ! type curl > /dev/null 2>&1 || ! type bzip2 > /dev/null 2>&1 || ! type tar > /dev/null 2>&1; then
-        if [ -x "/usr/bin/apt-get" ]; then
-            apt-get update && apt-get install -y curl bzip2 ca-certificates tar
-            rm -rf /var/lib/apt/lists/*
-        elif [ -x "/sbin/apk" ]; then
-            apk add --no-cache curl bzip2 ca-certificates tar
-        elif [ -x "/usr/bin/dnf" ] || [ -x "/usr/bin/yum" ]; then
-            if [ -x "/usr/bin/dnf" ]; then _PKG_MNGR="dnf"; else _PKG_MNGR="yum"; fi
-            # if curl-minimal is installed, replace it with curl
-            $_PKG_MNGR install -y curl bzip2 ca-certificates tar
-        elif [ -x "/usr/bin/microdnf" ]; then
-            microdnf install -y curl bzip2 ca-certificates tar
-        elif [ -x "/usr/bin/zypper" ]; then
-            zypper install -y curl bzip2 ca-certificates tar
-        else
-            echo "curl, bzip2, ca-certificates, or tar is missing and could not be installed. Please install them manually."
+    if command -v curl > /dev/null 2>&1 && command -v bzip2 > /dev/null 2>&1 && command -v tar > /dev/null 2>&1 && command -v sudo > /dev/null 2>&1; then
+        return
+    fi
+
+    local distro
+    distro=$(distro_detect)
+    case "$distro" in
+        ubuntu|debian)
+            install_deps_apt
+            ;;
+        arch)
+            install_deps_pacman
+            ;;
+        fedora|centos|rhel|almalinux|rocky)
+            install_deps_dnf
+            ;;
+        opensuse*|sles)
+            install_deps_zypper
+            ;;
+        alpine)
+            install_deps_apk
+            ;;
+        *)
+            echo "Dependencies are missing and could not be installed for distro: $distro"
+            echo "Please install curl, bzip2, ca-certificates, tar and sudo manually."
             exit 1
-        fi
+            ;;
+    esac
+
+    if ! command -v curl > /dev/null 2>&1 || ! command -v bzip2 > /dev/null 2>&1 || ! command -v tar > /dev/null 2>&1; then
+        echo "Required dependencies are still missing after installation."
+        exit 1
     fi
 }
 
@@ -85,15 +213,15 @@ init_shells() {
         case "$CURRENT_SHELL" in
             bash)
                 echo "Initializing micromamba for bash"
-                su - "${_REMOTE_USER}" -c "micromamba shell init -s bash -r \"${MICROMAMBA_ROOT}\""
+                remote_user_do micromamba shell init -s bash -r "${MICROMAMBA_ROOT}"
                 ;;
             zsh)
                 echo "Initializing micromamba for zsh"
-                su - "${_REMOTE_USER}" -c "micromamba shell init -s zsh -r \"${MICROMAMBA_ROOT}\""
+                remote_user_do micromamba shell init -s zsh -r "${MICROMAMBA_ROOT}"
                 ;;
             fish)
                 echo "Initializing micromamba for fish"
-                su - "${_REMOTE_USER}" -c "micromamba shell init -s fish -r \"${MICROMAMBA_ROOT}\""
+                remote_user_do micromamba shell init -s fish -r "${MICROMAMBA_ROOT}"
                 ;;
             *)
                 echo "Unsupported shell for initialization: $CURRENT_SHELL" >&2
