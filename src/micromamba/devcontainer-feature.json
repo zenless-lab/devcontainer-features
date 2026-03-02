@@ -1,7 +1,7 @@
 {
     "name": "Micromamba",
     "id": "micromamba",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Installs Micromamba, a tiny, pure C++ executable package manager. It is a statically linked version of Mamba.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/micromamba/README.md",
     "options": {
@@ -13,7 +13,7 @@
             "default": "latest",
             "description": "Select the version of Micromamba to install."
         },
-        "init_shells": {
+        "initShells": {
             "type": "string",
             "proposals": [
                 "bash",

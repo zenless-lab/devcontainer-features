@@ -3,8 +3,8 @@
 set -euo pipefail
 
 
-OPENCODE_VERSION=${OPENCODE_VERSION:-"latest"}
-SHELL_INIT=${SHELL_INIT:-"automatic"}
+OPENCODE_VERSION=${OPENCODEVERSION:-"latest"}
+SHELL_INIT=${SHELLINIT:-"automatic"}
 
 INSTALL_SCRIPT_URL="https://opencode.ai/install"
 

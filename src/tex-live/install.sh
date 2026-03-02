@@ -8,9 +8,9 @@ TEMP_DIR=/tmp/texlive
 
 SCHEME=${SCHEME:-"medium"}
 PAPER=${PAPER:-"a4"}
-DOC_INSTALL=${DOC_INSTALL:-"true"}
-SRC_INSTALL=${SRC_INSTALL:-"true"}
-REPO_URL=${REPO_URL:-"automatic"}
+DOC_INSTALL=${DOCINSTALL:-"true"}
+SRC_INSTALL=${SRCINSTALL:-"true"}
+REPO_URL=${REPOURL:-"automatic"}
 
 
 DEPS=(

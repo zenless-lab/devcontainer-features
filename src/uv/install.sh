@@ -6,8 +6,8 @@ echo "Starting UV installation script..."
 # NOTE: The `install.sh` script is always executed as root.
 
 UV_VERSION="${VERSION:-latest}"
-COMPLETION_SHELL="${COMPLETION_SHELL:-automatic}"
-PYTHON_VERSIONS="${PYTHON_VERSIONS:-automatic}"
+COMPLETION_SHELL="${COMPLETIONSHELL:-automatic}"
+PYTHON_VERSIONS="${PYTHONVERSION:-automatic}"
 
 uv_command=""
 

@@ -1,7 +1,7 @@
 {
     "name": "System Packages",
     "id": "pkg",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Installs system packages on various Linux distributions.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/pkg",
     "options": {
@@ -25,7 +25,7 @@
             "default": "",
             "description": "Comma-separated list of packages to install on Fedora/RHEL/CentOS (dnf)."
         },
-        "dnf_group": {
+        "dnfGroup": {
             "type": "string",
             "default": "",
             "description": "Comma-separated list of groups to install on Fedora/RHEL/CentOS (dnf)."
@@ -40,7 +40,7 @@
             "default": "",
             "description": "Comma-separated list of packages to install on Gentoo (emerge)."
         },
-        "rpm_ostree": {
+        "rpmOstree": {
             "type": "string",
             "default": "",
             "description": "Comma-separated list of packages to install via rpm-ostree."
@@ -50,7 +50,7 @@
             "default": "",
             "description": "Comma-separated list of packages to install on openSUSE (zypper)."
         },
-        "zypper_pattern": {
+        "zypperPattern": {
             "type": "string",
             "default": "",
             "description": "Comma-separated list of patterns to install on openSUSE (zypper)."

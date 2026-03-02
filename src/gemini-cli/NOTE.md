@@ -6,14 +6,14 @@ Installs Google Gemini CLI.
 
 | Option | Description | Value Type | Default Value |
 |---|---|---|---|
-| gemini_cli_version | Select the Gemini CLI version to install. | string | latest |
+| geminiCliVersion | Select the Gemini CLI version to install. | string | latest |
 
 ## Usage
 
 ```json
 "features": {
     "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:1": {
-        "gemini_cli_version": "latest"
+        "geminiCliVersion": "latest"
     }
 }
 ```

@@ -16,7 +16,7 @@ Installs Micromamba, a tiny, pure C++ executable package manager. It is a static
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
 | version | Select the version of Micromamba to install. | string | latest |
-| init_shells | Select the shell(s) to initialize, separated by commas. | string | bash |
+| initShells | Select the shell(s) to initialize, separated by commas. | string | bash |
 
 
 

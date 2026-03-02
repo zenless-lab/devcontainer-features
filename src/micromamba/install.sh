@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+INIT_SHELLS="${INITSHELLS:-bash}"
+
 prepare_deps() {
     if ! type curl > /dev/null 2>&1 || ! type bzip2 > /dev/null 2>&1 || ! type tar > /dev/null 2>&1; then
         if [ -x "/usr/bin/apt-get" ]; then
@@ -72,7 +74,7 @@ install_micromamba() {
 }
 
 init_shells() {
-    local SHELLS=$(echo "${INIT_SHELLS:-bash}" | tr ',' ' ')
+    local SHELLS=$(echo "${INIT_SHELLS}" | tr ',' ' ')
     if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
         MICROMAMBA_ROOT="/home/${_REMOTE_USER}/.micromamba"
     else

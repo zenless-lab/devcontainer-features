@@ -3,7 +3,7 @@
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "opencode": {
-                "opencode_version": "1.1.26"
+                "opencodeVersion": "1.1.26"
             }
         }
     },
@@ -11,8 +11,8 @@
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "opencode": {
-                "opencode_version": "latest",
-                "SHELL_INIT": "zsh,bash"
+                "opencodeVersion": "latest",
+                "shellInit": "zsh,bash"
             }
         }
     }

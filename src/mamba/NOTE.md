@@ -7,7 +7,7 @@ Installs Mamba, a fast, robust, and cross-platform package manager. It is a reim
 | Option | Description | Value Type | Default Value |
 |---|---|---|---|
 | version | Select the version of Mamba to install. | string | latest |
-| init_shells | Select the shell(s) to initialize, separated by commas. | string | bash |
+| initShells | Select the shell(s) to initialize, separated by commas. | string | bash |
 
 ## Usage
 
@@ -15,7 +15,7 @@ Installs Mamba, a fast, robust, and cross-platform package manager. It is a reim
 "features": {
     "ghcr.io/zenless-lab/devcontainer-features/mamba:1": {
         "version": "latest",
-        "init_shells": "bash"
+        "initShells": "bash"
     }
 }
 ```

@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-GEMINI_CLI_VERSION="${GEMINI_CLI_VERSION:-latest}"
+GEMINI_CLI_VERSION="${GEMINICLIVERSION:-latest}"
 
 
 # Execute command as remote user if specified

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+INIT_SHELLS="${INITSHELLS:-all}"
+
 
 # Ensure wget is installed for downloading the installer
 prepare_deps() {
@@ -69,7 +71,7 @@ check_is_new_init() {
 
 # Initialize mamba for specified shells
 init_shells() {
-    local shells=$(echo "${INIT_SHELLS:-all}" | tr ',' ' ')
+    local shells=$(echo "${INIT_SHELLS}" | tr ',' ' ')
     local version="${VERSION:-latest}"
     local mamba_path=""
     local init_command=""
