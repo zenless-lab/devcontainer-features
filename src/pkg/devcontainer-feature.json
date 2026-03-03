@@ -1,7 +1,7 @@
 {
     "name": "System Packages",
     "id": "pkg",
-    "version": "1.1.0",
+    "version": "1.0.0",
     "description": "Installs system packages on various Linux distributions.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/pkg",
     "options": {

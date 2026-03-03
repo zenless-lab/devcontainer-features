@@ -1,7 +1,7 @@
 {
     "name": "uv",
     "id": "uv",
-    "version": "1.2.0",
+    "version": "1.0.0",
     "description": "An extremely fast Python package installer and resolver, written in Rust.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/uv",
     "options": {

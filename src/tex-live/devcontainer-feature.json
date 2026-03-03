@@ -1,7 +1,7 @@
 {
     "name": "TeX Live",
     "id": "tex-live",
-    "version": "1.1.0",
+    "version": "1.0.0",
     "description": "Installs TeX Live, a comprehensive TeX system.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/tex-live",
     "options": {
