@@ -134,7 +134,7 @@ install_deps() {
         arch)
             install_pacman_deps
             ;;
-        fedora|centos|rhel)
+        fedora|centos|rhel|almalinux|rocky)
             install_dnf_deps
             ;;
         gentoo)
