@@ -6,16 +6,16 @@ Installs OpenCode CLI.
 
 | Option | Description | Value Type | Default Value |
 |---|---|---|---|
-| opencode_version | Select the version to install. | string | latest |
-| shell_init | Initialize shell completions for the specified shell(s). Comma-separated list of shells or 'automatic' to detect the current shell. | string | automatic |
+| opencodeVersion | Select the version to install. | string | latest |
+| shellInit | Initialize shell completions for the specified shell(s). Comma-separated list of shells or 'automatic' to detect the current shell. | string | automatic |
 
 ## Usage
 
 ```json
 "features": {
     "ghcr.io/zenless-lab/devcontainer-features/opencode:1": {
-        "opencode_version": "latest",
-        "shell_init": "automatic"
+        "opencodeVersion": "latest",
+        "shellInit": "automatic"
     }
 }
 ```

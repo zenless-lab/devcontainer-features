@@ -7,12 +7,12 @@ PKG=${PKG:-}
 APT=${APT:-}
 PACMAN=${PACMAN:-}
 DNF=${DNF:-}
-DNF_GROUP=${DNF_GROUP:-}
+DNF_GROUP=${DNFGROUP:-}
 YUM=${YUM:-}
 EMERGE=${EMERGE:-}
-RPM_OSTREE=${RPM_OSTREE:-}
+RPM_OSTREE=${RPMOSTREE:-}
 ZYPPER=${ZYPPER:-}
-ZYPPER_PATTERN=${ZYPPER_PATTERN:-}
+ZYPPER_PATTERN=${ZYPPERPATTERN:-}
 APK=${APK:-}
 
 
@@ -134,7 +134,7 @@ install_deps() {
         arch)
             install_pacman_deps
             ;;
-        fedora|centos|rhel)
+        fedora|centos|rhel|almalinux|rocky)
             install_dnf_deps
             ;;
         gentoo)

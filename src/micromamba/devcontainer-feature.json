@@ -13,7 +13,7 @@
             "default": "latest",
             "description": "Select the version of Micromamba to install."
         },
-        "init_shells": {
+        "initShells": {
             "type": "string",
             "proposals": [
                 "bash",

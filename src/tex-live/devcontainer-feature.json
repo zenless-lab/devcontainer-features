@@ -27,17 +27,17 @@
             "default": "a4",
             "description": "Select the default paper size."
         },
-        "doc_install": {
+        "docInstall": {
             "type": "boolean",
             "default": true,
             "description": "Install documentation."
         },
-        "src_install": {
+        "srcInstall": {
             "type": "boolean",
             "default": true,
             "description": "Install source files."
         },
-        "repo_url": {
+        "repoUrl": {
             "type": "string",
             "default": "automatic",
             "description": "Custom CTAN repository URL."

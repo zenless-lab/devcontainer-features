@@ -15,8 +15,8 @@ Installs OpenCode CLI
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| opencode_version | Select the version to install. | string | latest |
-| shell_init | Initialize shell completions for the specified shell(s). Comma-separated list of shells or 'automatic' to detect the current shell. | string | automatic |
+| opencodeVersion | Select the version to install. | string | latest |
+| shellInit | Initialize shell completions for the specified shell(s). Comma-separated list of shells or 'automatic' to detect the current shell. | string | automatic |
 
 
 

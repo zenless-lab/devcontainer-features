@@ -17,7 +17,7 @@
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
             "micromamba": {
-                "init_shells": "zsh"
+                "initShells": "zsh"
             },
             "ghcr.io/devcontainers/features/common-utils:2": {
                 "configureZshAsDefaultShell": true

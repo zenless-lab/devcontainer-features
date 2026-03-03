@@ -15,7 +15,7 @@ Installs Google Gemini CLI.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| gemini_cli_version | Select the Gemini CLI version to install. | string | latest |
+| geminiCliVersion | Select the Gemini CLI version to install. | string | latest |
 
 
 

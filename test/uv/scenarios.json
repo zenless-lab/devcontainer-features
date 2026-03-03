@@ -19,7 +19,7 @@
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "uv": {
-                "completion_shell": "bash"
+                "completionShell": "bash"
             }
         }
     },
@@ -27,7 +27,7 @@
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "uv": {
-                "python_versions": "3.10,3.11,3.12"
+                "pythonVersion": "3.10,3.11,3.12"
             }
         }
     }

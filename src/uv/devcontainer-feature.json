@@ -1,7 +1,7 @@
 {
     "name": "uv",
     "id": "uv",
-    "version": "1.1.0",
+    "version": "1.0.0",
     "description": "An extremely fast Python package installer and resolver, written in Rust.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/uv",
     "options": {
@@ -14,7 +14,7 @@
             "default": "latest",
             "description": "Select the version of uv to install."
         },
-        "python_versions": {
+        "pythonVersion": {
             "type": "string",
             "proposals": [
                 "automatic",
@@ -23,7 +23,7 @@
             "default": "automatic",
             "description": "Install Python versions using 'uv python install'. Comma-separated values; use 'automatic' to install the default Python with no arguments."
         },
-        "completion_shell": {
+        "completionShell": {
             "type": "string",
             "proposals": [
                 "automatic",

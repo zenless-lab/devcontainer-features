@@ -3,8 +3,8 @@
 set -euo pipefail
 
 
-OPENCODE_VERSION=${OPENCODE_VERSION:-"latest"}
-SHELL_INIT=${SHELL_INIT:-"automatic"}
+OPENCODE_VERSION=${OPENCODEVERSION:-"latest"}
+SHELL_INIT=${SHELLINIT:-"automatic"}
 
 INSTALL_SCRIPT_URL="https://opencode.ai/install"
 
@@ -62,7 +62,6 @@ install_deps_pacman() {
 install_deps_dnf() {
     dnf check-update || true
     dnf install -y "${PKGS[@]}"
-    dnf group install -y "c-development"
 }
 
 
@@ -89,7 +88,6 @@ install_deps_rpm_ostree() {
 install_deps_zypper() {
     zypper up -y
     zypper in -y "${PKGS[@]}"
-    zypper in -t pattern devel_basis
 }
 
 

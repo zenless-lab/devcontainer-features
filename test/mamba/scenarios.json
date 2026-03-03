@@ -11,7 +11,7 @@
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
             "mamba": {
-                "init_shells": "none"
+                "initShells": "none"
             }
         }
     },
@@ -19,7 +19,7 @@
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
             "mamba": {
-                "init_shells": "zsh"
+                "initShells": "zsh"
             }
         }
     }

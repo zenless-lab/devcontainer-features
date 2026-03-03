@@ -16,7 +16,7 @@ Installs Mamba, a fast, robust, and cross-platform package manager. It is a reim
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
 | version | Select the version of Mamba to install. | string | latest |
-| init_shells | Select the shell(s) to initialize, separated by commas. | string | bash |
+| initShells | Select the shell(s) to initialize, separated by commas. | string | bash |
 
 
 

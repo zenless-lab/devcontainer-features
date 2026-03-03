@@ -4,13 +4,13 @@
     "name": "OpenCode",
     "description": "Installs OpenCode CLI",
     "options": {
-        "opencode_version": {
+        "opencodeVersion": {
             "type": "string",
             "proposals": ["latest"],
             "default": "latest",
             "description": "Select the version to install."
         },
-        "shell_init": {
+        "shellInit": {
             "type": "string",
             "proposals": [
                 "automatic",

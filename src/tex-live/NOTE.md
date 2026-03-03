@@ -8,9 +8,9 @@ Installs TeX Live, a comprehensive TeX system.
 |---|---|---|---|
 | scheme | Select the TeX Live scheme to install. | string | medium |
 | paper | Select the default paper size. | string | a4 |
-| doc_install | Install documentation. | boolean | true |
-| src_install | Install source files. | boolean | true |
-| repo_url | Custom CTAN repository URL. | string | automatic |
+| docInstall | Install documentation. | boolean | true |
+| srcInstall | Install source files. | boolean | true |
+| repoUrl | Custom CTAN repository URL. | string | automatic |
 
 ## Usage
 
@@ -19,8 +19,8 @@ Installs TeX Live, a comprehensive TeX system.
     "ghcr.io/zenless-lab/devcontainer-features/tex-live:1": {
         "scheme": "full",
         "paper": "a4",
-        "doc_install": true,
-        "src_install": true
+        "docInstall": true,
+        "srcInstall": true
     }
 }
 ```
