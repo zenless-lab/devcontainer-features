@@ -4,19 +4,25 @@ set -euo pipefail
 
 GEMINI_CLI_VERSION="${GEMINICLIVERSION:-latest}"
 SANDBOX_MODE="${SANDBOX:-false}"
+GEMINI_CLI_HOME="${GEMINICLIHOME:-}"
 
 readonly DEFAULT_PNPM_GLOBAL_DIR="/usr/local/share/pnpm-global"
 readonly DEFAULT_PNPM_GLOBAL_BIN_DIR="/usr/local/bin"
-readonly DEFAULT_GEMINI_CLI_HOME="/gemini-cli"
-readonly DEFAULT_GEMINI_CONFIG_DIR="${DEFAULT_GEMINI_CLI_HOME}/.gemini"
 
 
 configure_sandbox_env() {
 	{
 		echo "export GEMINI_SANDBOX=\"${SANDBOX_MODE}\""
-		echo "export GEMINI_CLI_HOME=\"${DEFAULT_GEMINI_CLI_HOME}\""
+		if [ -n "${GEMINI_CLI_HOME}" ]; then
+			echo "export GEMINI_CLI_HOME=\"${GEMINI_CLI_HOME}\""
+		fi
 	} > /etc/profile.d/gemini-cli.sh
 	chmod 644 /etc/profile.d/gemini-cli.sh
+
+	if [ -n "${GEMINI_CLI_HOME}" ]; then
+		mkdir -p "${GEMINI_CLI_HOME}"
+		chmod +rw "${GEMINI_CLI_HOME}"
+	fi
 }
 
 
@@ -104,22 +110,9 @@ install_gemini_cli() {
 }
 
 
-prepare_gemini_config_dirs() {
-	mkdir -p "${DEFAULT_GEMINI_CONFIG_DIR}"
-	chmod 755 "${DEFAULT_GEMINI_CLI_HOME}" "${DEFAULT_GEMINI_CONFIG_DIR}"
-
-	if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
-		chown -R "${_REMOTE_USER}:${_REMOTE_USER}" "${DEFAULT_GEMINI_CLI_HOME}"
-	else
-		chown -R root:root "${DEFAULT_GEMINI_CLI_HOME}"
-	fi
-}
-
-
 echo "Activating feature 'gemini-cli'"
 configure_sandbox_env
 configure_pnpm_global_dirs
 export_pnpm_runtime_env
-prepare_gemini_config_dirs
 install_gemini_cli
 echo "Finished installing Gemini CLI"

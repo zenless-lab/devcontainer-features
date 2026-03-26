@@ -8,6 +8,7 @@ Installs Google Gemini CLI.
 |---|---|---|---|
 | geminiCliVersion | Select the Gemini CLI version to install. | string | latest |
 | sandbox | Set the default `GEMINI_SANDBOX` value exported by the feature profile script. | string | false |
+| geminiCliHome | Set `GEMINI_CLI_HOME` and pre-create its `.gemini` directory. Leave empty to avoid configuring `GEMINI_CLI_HOME`. | string |  |
 
 ## Usage
 
@@ -15,7 +16,8 @@ Installs Google Gemini CLI.
 "features": {
     "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:2": {
         "geminiCliVersion": "latest",
-        "sandbox": "docker"
+        "sandbox": "docker",
+        "geminiCliHome": "/gemini-cli"
     }
 }
 ```
@@ -26,25 +28,27 @@ Installs Google Gemini CLI.
 - **Installation**: Reuses the `pnpm` installed by the Node feature, then installs `@google/gemini-cli` globally with `pnpm add -g`.
 - **PATH**: Configures `pnpm` global installs to place the Gemini CLI binary in `/usr/local/bin`, which is already on the default shell PATH.
 - **Sandbox default**: Writes `/etc/profile.d/gemini-cli.sh` to export `GEMINI_SANDBOX=false` by default, or `docker` / `runsc` when configured.
-- **Shared Gemini state**: Writes `GEMINI_CLI_HOME=/gemini-cli` to `/etc/profile.d/gemini-cli.sh`, so Gemini CLI stores its user-level state in `/gemini-cli/.gemini`.
+- **Optional shared Gemini state**: Only writes `GEMINI_CLI_HOME` to `/etc/profile.d/gemini-cli.sh` when `geminiCliHome` is configured.
 
 ## Shared Credentials
 
-Gemini CLI creates its `.gemini` directory under `GEMINI_CLI_HOME`. This feature fixes `GEMINI_CLI_HOME` to `/gemini-cli`, so the effective storage location becomes `/gemini-cli/.gemini`.
+Gemini CLI creates its `.gemini` directory under `GEMINI_CLI_HOME`. By default this feature does not set `GEMINI_CLI_HOME`, so Gemini CLI falls back to its own default location.
 
-If you want multiple devcontainers on the same machine to reuse the same Gemini CLI credentials and local state, mount a host directory to `/gemini-cli`.
+If you want multiple devcontainers on the same machine to reuse the same Gemini CLI credentials and local state, set `geminiCliHome` and mount a host directory to the same path.
 
 Example:
 
 ```json
 {
     "mounts": [
-        "source=${localEnv:HOME}/.cache/devcontainer-gemini-cli,target=/usr/local/share/gemini-cli,type=bind"
+        "source=${localEnv:HOME}/.cache/devcontainer-gemini-cli,target=/gemini-cli,type=bind"
     ],
     "features": {
-        "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:2": {}
+        "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:2": {
+            "geminiCliHome": "/gemini-cli"
+        }
     }
 }
 ```
 
-With this mount, every devcontainer that uses the same host path will see the same `/usr/local/share/gemini-cli/.gemini` directory.
+With this mount, every devcontainer that uses the same host path will see the same `/gemini-cli/.gemini` directory.

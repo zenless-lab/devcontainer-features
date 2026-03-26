@@ -22,6 +22,11 @@
             ],
             "default": "false",
             "description": "Set the default GEMINI_SANDBOX value exported by the feature profile script."
+        },
+        "geminiCliHome": {
+            "type": "string",
+            "default": "",
+            "description": "Set GEMINI_CLI_HOME and pre-create its .gemini directory. Leave empty to avoid configuring GEMINI_CLI_HOME."
         }
     },
     "dependsOn": {

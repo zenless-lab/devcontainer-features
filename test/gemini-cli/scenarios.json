@@ -34,5 +34,13 @@
                 "sandbox": "runsc"
             }
         }
+    },
+    "custom_home": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "gemini-cli": {
+                "geminiCliHome": "/gemini-cli"
+            }
+        }
     }
 }
