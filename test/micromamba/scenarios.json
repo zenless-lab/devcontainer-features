@@ -25,7 +25,7 @@
         }
     },
     "rockylinux": {
-        "image": "rockylinux:9.3.20231119-minimal",
+        "image": "rockylinux:9.3",
         "features": {
             "micromamba": {}
         }
