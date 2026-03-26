@@ -1,7 +1,7 @@
 {
     "name": "Micromamba",
     "id": "micromamba",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Installs Micromamba, a tiny, pure C++ executable package manager. It is a statically linked version of Mamba.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/micromamba/README.md",
     "options": {
@@ -23,6 +23,18 @@
             ],
             "default": "bash",
             "description": "Select the shell(s) to initialize, separated by commas."
+        }
+    },
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:1": {
+            "apt": "sudo,curl,bzip2,ca-certificates,tar",
+            "pacman": "sudo,curl,bzip2,ca-certificates,tar",
+            "dnf": "sudo,curl,bzip2,ca-certificates,tar",
+            "yum": "sudo,curl,bzip2,ca-certificates,tar",
+            "emerge": "app-admin/sudo,net-misc/curl,sys-apps/bzip2,app-misc/ca-certificates,app-arch/tar",
+            "rpmOstree": "sudo,curl,bzip2,ca-certificates,tar",
+            "zypper": "sudo,curl,bzip2,ca-certificates,tar",
+            "apk": "sudo,curl,bzip2,ca-certificates,tar"
         }
     },
     "installsAfter": [

@@ -1,7 +1,7 @@
 {
     "name": "Mamba",
     "id": "mamba",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Installs Mamba, a fast, robust, and cross-platform package manager. It is a reimplementation of the conda package manager in C++.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/mamba",
     "options": {
@@ -22,6 +22,18 @@
             ],
             "default": "bash",
             "description": "Select the shell(s) to initialize, separated by commas."
+        }
+    },
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:1": {
+            "apt": "sudo,curl,ca-certificates",
+            "pacman": "sudo,curl,ca-certificates",
+            "dnf": "sudo,curl,ca-certificates",
+            "yum": "sudo,curl,ca-certificates",
+            "emerge": "app-admin/sudo,net-misc/curl,app-misc/ca-certificates",
+            "rpmOstree": "sudo,curl,ca-certificates",
+            "zypper": "sudo,curl,ca-certificates",
+            "apk": "sudo,curl,ca-certificates"
         }
     },
     "installsAfter": [

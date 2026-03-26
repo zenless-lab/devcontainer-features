@@ -25,200 +25,32 @@ distro_detect() {
 }
 
 
-install_apt_deps() {
-    local pkgs=(
-        build-essential
-        libreadline-dev
-        libncurses5-dev
-        curl
-        libcurl4-gnutls-dev
-        xorg-dev
-        gfortran
-        python3-dev
-        python3-pip
-        aria2
-    )
-    apt-get update
-    DEBIAN_FRONTEND=noninteractive apt-get install -y "${pkgs[@]}"
-    rm -rf /var/lib/apt/lists/*
-}
-
-
-install_pacman_deps() {
-    local pkgs=(
-        base-devel
-        gcc-fortran
-        curl
-        libxt
-        perl-devel-checklib
-        perl-file-which
-        python
-        python-pip
-        python-setuptools
-        python-astropy
-        python-numpy
-        python-scipy
-        python-matplotlib
-        aria2
-    )
-    pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed "${pkgs[@]}"
-}
-
-
-install_dnf_deps() {
-    local pkgs=(
-        redhat-rpm-config
-        readline-devel
-        ncurses-devel
-        zlib-devel
-        libcurl-devel
-        libXt-devel
-        make
-        gcc
-        gcc-c++
-        gcc
-        gcc-gfortran
-        perl-devel
-        perl-Devel-CheckLib
-        perl-DirHandle
-        perl-Env
-        perl-ExtUtils-MakeMaker
-        perl-File-Which
-        python3-devel
-        # python3-astropy
-        python3-numpy
-        # python3-matplotlib
-    )
-    local pip_pkgs=(
-        scipy
-        astropy
-        matplotlib
-    )
-
-    if dnf list aria2 >/dev/null 2>&1; then
-        pkgs+=("aria2")
-    else
-        pkgs+=("curl")
-    fi
-
-    dnf check-update || true
-
-    dnf install -y "${pkgs[@]}"
-    pip3 install --break-system-packages "${pip_pkgs[@]}"
-}
-
-
-install_zypper_deps() {
-    local patterns=(
-        devel_basis
-    )
-    local pkgs=(
-        readline-devel
-        ncurses-devel
-        libcurl-devel
-        libXt-devel
-        gcc-fortran
-        perl-Devel-CheckLib
-        perl-File-Which
-        python3-devel
-        python3-pip
-        python3-setuptools
-        python3-astropy
-        python3-numpy
-        python3-scipy
-        python3-matplotlib
-        aria2
-    )
-    zypper up -y
-    zypper install -y "${pkgs[@]}"
-    zypper install -t pattern "${patterns[@]}"
-}
-
-
-install_emerge_deps() {
-    local pkgs=(
-        sys-libs/readline
-        sys-libs/ncurses
-        net-misc/curl
-        x11-libs/libXt
-        dev-perl/Devel-CheckLib
-        dev-perl/File-Which
-        dev-python/astropy
-        dev-python/numpy
-        dev-python/scipy
-        dev-python/matplotlib
-        net-p2p/aria2
-    )
-    emerge -av sys-devel/gcc[fortran]
-    emerge --ask "${pkgs[@]}"
-}
-
-
-install_apk_deps() {
-    local pkgs=(
-        build-base
-        gfortran
-        readline-dev
-        ncurses-dev
-        curl-dev
-        libxt-dev
-        perl-dev
-        python3-dev
-        py3-pip
-        py3-setuptools
-        py3-numpy
-        py3-scipy
-        aria2
-        py3-matplotlib
-        tcl-dev
-        tk-dev
-        tcl-readline
-    )
-    apk add --no-cache "${pkgs[@]}"
-    # HACK: Linker fix: Alpine APK lacks libtclreadline.so.2.1.0.
-    #     Creating a symbolic link from the system-provided version to trick the HEASoft 'make' process.
-    if [ ! -e '/usr/lib/libtclreadline-2.1.0.so' ]; then
-        local source
-        source=$(ls /usr/lib/libtclreadline-*.so 2>/dev/null | sort -V | tail -n 1)
-        echo "Target missing. Creating symlink: ${source} -> /usr/lib/libtclreadline-2.1.0.so"
-        ln -s "${source}" /usr/lib/libtclreadline-2.1.0.so
-    fi
-    pip3 install --break-system-packages astropy
-}
-
-
-# Main installation function
-install_deps() {
+post_install_deps() {
     local distro
     distro=$(distro_detect)
 
     case "$distro" in
-        ubuntu|debian)
-            install_apt_deps
-            ;;
-        arch)
-            install_pacman_deps
-            ;;
         fedora|centos|rhel)
-            install_dnf_deps
+            pip3 install --break-system-packages scipy astropy matplotlib
             ;;
         gentoo)
-            install_emerge_deps
+            if ! command -v gfortran >/dev/null 2>&1; then
+                emerge -av sys-devel/gcc[fortran]
+            fi
             ;;
         almalinux|rocky)
-            install_dnf_deps
-            ;;
-        opensuse*|sles)
-            install_zypper_deps
+            pip3 install --break-system-packages scipy astropy matplotlib
             ;;
         alpine)
-            install_apk_deps
-            ;;
-        *)
-            echo "Unsupported or unknown distribution: $distro"
-            echo "Please install dependencies manually."
-            exit 1
+            if [ ! -e '/usr/lib/libtclreadline-2.1.0.so' ]; then
+                local source
+                source=$(ls /usr/lib/libtclreadline-*.so 2>/dev/null | sort -V | tail -n 1)
+                if [ -n "${source}" ]; then
+                    echo "Target missing. Creating symlink: ${source} -> /usr/lib/libtclreadline-2.1.0.so"
+                    ln -s "${source}" /usr/lib/libtclreadline-2.1.0.so
+                fi
+            fi
+            pip3 install --break-system-packages astropy
             ;;
     esac
 }
@@ -286,7 +118,7 @@ setup_environment() {
 
 # Main script execution
 echo "Installing dependencies..."
-install_deps
+post_install_deps
 download_heasoft
 install_heasoft
 setup_environment

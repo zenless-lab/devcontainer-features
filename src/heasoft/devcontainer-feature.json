@@ -1,7 +1,7 @@
 {
     "name": "HEASoft",
     "id": "heasoft",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Installs HEASoft (High Energy Astrophysics Science Archive Research Center).",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/heasoft",
     "options": {
@@ -12,6 +12,19 @@
             ],
             "default": "6.36",
             "description": "Select the version of HEASoft to install."
+        }
+    },
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:1": {
+            "apt": "build-essential,libreadline-dev,libncurses5-dev,curl,libcurl4-gnutls-dev,xorg-dev,gfortran,python3-dev,python3-pip,aria2",
+            "pacman": "base-devel,gcc-fortran,curl,libxt,perl-devel-checklib,perl-file-which,python,python-pip,python-setuptools,python-astropy,python-numpy,python-scipy,python-matplotlib,aria2",
+            "dnf": "redhat-rpm-config,readline-devel,ncurses-devel,zlib-devel,libcurl-devel,libXt-devel,make,gcc,gcc-c++,gcc-gfortran,perl-devel,perl-Devel-CheckLib,perl-DirHandle,perl-Env,perl-ExtUtils-MakeMaker,perl-File-Which,python3-devel,python3-pip,python3-numpy",
+            "yum": "redhat-rpm-config,readline-devel,ncurses-devel,zlib-devel,libcurl-devel,libXt-devel,make,gcc,gcc-c++,gcc-gfortran,perl-devel,perl-Devel-CheckLib,perl-DirHandle,perl-Env,perl-ExtUtils-MakeMaker,perl-File-Which,python3-devel,python3-pip,python3-numpy",
+            "emerge": "sys-libs/readline,sys-libs/ncurses,net-misc/curl,x11-libs/libXt,dev-perl/Devel-CheckLib,dev-perl/File-Which,dev-python/astropy,dev-python/numpy,dev-python/scipy,dev-python/matplotlib,net-p2p/aria2",
+            "rpmOstree": "redhat-rpm-config,readline-devel,ncurses-devel,zlib-devel,libcurl-devel,libXt-devel,make,gcc,gcc-c++,gcc-gfortran,perl-devel,perl-Devel-CheckLib,perl-DirHandle,perl-Env,perl-ExtUtils-MakeMaker,perl-File-Which,python3-devel,python3-pip,python3-numpy",
+            "zypper": "readline-devel,ncurses-devel,libcurl-devel,libXt-devel,gcc-fortran,perl-Devel-CheckLib,perl-File-Which,python3-devel,python3-pip,python3-setuptools,python3-astropy,python3-numpy,python3-scipy,python3-matplotlib,aria2",
+            "zypperPattern": "devel_basis",
+            "apk": "build-base,gfortran,readline-dev,ncurses-dev,curl-dev,libxt-dev,perl-dev,python3-dev,py3-pip,py3-setuptools,py3-numpy,py3-scipy,aria2,py3-matplotlib,tcl-dev,tk-dev,tcl-readline"
         }
     },
     "installsAfter": [

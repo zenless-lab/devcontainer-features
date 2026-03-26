@@ -13,16 +13,6 @@ SRC_INSTALL=${SRCINSTALL:-"true"}
 REPO_URL=${REPOURL:-"automatic"}
 
 
-DEPS=(
-    curl
-    ca-certificates
-    perl
-    xz-utils
-    gzip
-    tar
-)
-
-
 get_remote_user_home() {
     if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
         echo "/home/${_REMOTE_USER}"
@@ -42,58 +32,6 @@ detect_distro() {
 }
 
 
-install_apt_deps() {
-    export DEBIAN_FRONTEND=noninteractive
-
-    echo "Installing dependencies: ${DEPS[*]}"
-    apt-get update
-    apt-get install -y "${DEPS[@]}"
-    rm -rf /var/lib/apt/lists/*
-}
-
-
-install_yum_deps() {
-    echo "Installing dependencies: ${DEPS[*]}"
-    yum install -y "${DEPS[@]}"
-    yum clean all
-}
-
-
-install_pacman_deps() {
-    echo "Installing dependencies: ${DEPS[*]}"
-    pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed "${DEPS[@]}"
-}
-
-
-install_dnf_deps() {
-    echo "Installing dependencies: ${DEPS[*]}"
-    dnf check-update || true
-    dnf install -y "${DEPS[@]}"
-}
-
-
-install_apk_deps() {
-    local apk_pkgs=(
-        curl
-        ca-certificates
-        perl
-        xz
-        gzip
-        tar
-    )
-    echo "Installing dependencies: ${apk_pkgs[*]}"
-    apk add --no-cache "${apk_pkgs[@]}"
-}
-
-
-install_zypper_deps() {
-    echo "Installing dependencies: ${DEPS[*]}"
-    zypper refresh
-    zypper install -y "${DEPS[@]}"
-}
-
-
 print_parameters() {
     echo "Installation parameters:"
     echo "  Scheme:       ${SCHEME}"
@@ -101,37 +39,6 @@ print_parameters() {
     echo "  Doc install:  ${DOC_INSTALL}"
     echo "  Src install:  ${SRC_INSTALL}"
     echo "  Repo URL:     ${REPO_URL}"
-}
-
-
-install_deps() {
-    local distro
-    distro=$(detect_distro)
-
-    case "${distro}" in
-        ubuntu|debian)
-            install_apt_deps
-            ;;
-        centos|rhel|rocky|almalinux)
-            install_yum_deps
-            ;;
-        fedora)
-            install_dnf_deps
-            ;;
-        arch)
-            install_pacman_deps
-            ;;
-        alpine)
-            install_apk_deps
-            ;;
-        opensuse*|sles)
-            install_zypper_deps
-            ;;
-        *)
-            echo "Unsupported distribution: ${distro}. Please install dependencies manually: ${DEPS[*]}"
-            exit 1
-            ;;
-    esac
 }
 
 
@@ -210,7 +117,6 @@ post_install_configuration() {
 # Main execution
 echo "Starting TeX Live installation..."
 print_parameters
-install_deps
 cleanup_texlive
 download_install_script
 install_texlive

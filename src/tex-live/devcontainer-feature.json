@@ -1,7 +1,7 @@
 {
     "name": "TeX Live",
     "id": "tex-live",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Installs TeX Live, a comprehensive TeX system.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/tex-live",
     "options": {
@@ -41,6 +41,17 @@
             "type": "string",
             "default": "automatic",
             "description": "Custom CTAN repository URL."
+        }
+    },
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:1": {
+            "apt": "curl,ca-certificates,perl,xz-utils,gzip,tar",
+            "pacman": "curl,ca-certificates,perl,xz,gzip,tar",
+            "dnf": "curl,ca-certificates,perl,xz,gzip,tar",
+            "yum": "curl,ca-certificates,perl,xz,gzip,tar",
+            "emerge": "net-misc/curl,app-misc/ca-certificates,dev-lang/perl,app-arch/xz-utils,app-arch/gzip,app-arch/tar",
+            "zypper": "curl,ca-certificates,perl,xz,gzip,tar",
+            "apk": "curl,ca-certificates,perl,xz,gzip,tar"
         }
     },
     "installsAfter": [

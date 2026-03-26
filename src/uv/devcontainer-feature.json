@@ -1,7 +1,7 @@
 {
     "name": "uv",
     "id": "uv",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "An extremely fast Python package installer and resolver, written in Rust.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/uv",
     "options": {
@@ -32,6 +32,18 @@
             ],
             "default": "automatic",
             "description": "Install autocompletion for a specific shell, or try to detect automatically."
+        }
+    },
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:1": {
+            "apt": "sudo,curl,ca-certificates",
+            "pacman": "sudo,curl,ca-certificates",
+            "dnf": "sudo,curl,ca-certificates",
+            "yum": "sudo,curl,ca-certificates",
+            "emerge": "app-admin/sudo,net-misc/curl,app-misc/ca-certificates",
+            "rpmOstree": "sudo,curl,ca-certificates",
+            "zypper": "sudo,curl,ca-certificates",
+            "apk": "sudo,curl,ca-certificates"
         }
     },
     "installsAfter": [

@@ -16,11 +16,31 @@ ZYPPER_PATTERN=${ZYPPERPATTERN:-}
 APK=${APK:-}
 
 
+trim_space() {
+    printf '%s' "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
+
+csv_to_words() {
+    printf '%s' "$1" | tr ',' ' '
+}
+
+
+merge_lists() {
+    merged=""
+    for value in "$@"; do
+        if [ -n "$value" ]; then
+            merged="$merged $(csv_to_words "$value")"
+        fi
+    done
+    trim_space "$merged"
+}
+
+
 install_apt_deps() {
     export DEBIAN_FRONTEND=noninteractive
 
-    install_pkgs="$(echo "${PKG}" | tr ',' ' ') $(echo "${APT}" | tr ',' ' ')"
-    install_pkgs=$(echo "$install_pkgs" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    install_pkgs=$(merge_lists "$PKG" "$APT")
     if [ -n "${install_pkgs}" ]; then
         echo "Installing packages: ${install_pkgs}"
         apt-get update
@@ -31,8 +51,7 @@ install_apt_deps() {
 
 
 install_pacman_deps() {
-    install_pkgs="$(echo "${PKG}" | tr ',' ' ') $(echo "${PACMAN}" | tr ',' ' ')"
-    install_pkgs=$(echo "$install_pkgs" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    install_pkgs=$(merge_lists "$PKG" "$PACMAN")
     if [ -n "${install_pkgs}" ]; then
         echo "Installing packages: ${install_pkgs}"
         pacman -Syu --noconfirm
@@ -42,15 +61,14 @@ install_pacman_deps() {
 
 
 install_dnf_deps() {
-    install_pkgs="$(echo "${PKG}" | tr ',' ' ') $(echo "${DNF}" | tr ',' ' ')"
-    install_pkgs=$(echo "$install_pkgs" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    install_pkgs=$(merge_lists "$PKG" "$DNF")
     if [ -n "${install_pkgs}" ]; then
         echo "Installing packages: ${install_pkgs}"
         dnf check-update || true
         dnf install -y ${install_pkgs}
     fi
-    install_groups="$(echo "${DNF_GROUP}" | tr ',' ' ')"
-    install_groups=$(echo "$install_groups" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+    install_groups=$(merge_lists "$DNF_GROUP")
     if [ -n "${install_groups}" ]; then
         echo "Installing groups: ${install_groups}"
         dnf groupinstall -y ${install_groups}
@@ -59,18 +77,36 @@ install_dnf_deps() {
 
 
 install_yum_deps() {
-    install_pkgs="$(echo "${PKG}" | tr ',' ' ') $(echo "${YUM}" | tr ',' ' ')"
-    install_pkgs=$(echo "$install_pkgs" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    install_pkgs=$(merge_lists "$PKG" "$DNF" "$YUM")
     if [ -n "${install_pkgs}" ]; then
         echo "Installing packages: ${install_pkgs}"
         yum install -y ${install_pkgs}
+    fi
+
+    install_groups=$(merge_lists "$DNF_GROUP")
+    if [ -n "${install_groups}" ]; then
+        echo "Installing groups: ${install_groups}"
+        yum groupinstall -y ${install_groups}
+    fi
+}
+
+
+install_microdnf_deps() {
+    install_pkgs=$(merge_lists "$PKG" "$DNF")
+    if [ -n "${install_pkgs}" ]; then
+        echo "Installing packages: ${install_pkgs}"
+        microdnf install -y ${install_pkgs}
+    fi
+
+    install_groups=$(merge_lists "$DNF_GROUP")
+    if [ -n "${install_groups}" ]; then
+        echo "Skipping dnfGroup on microdnf-based image: ${install_groups}"
     fi
 }
 
 
 install_emerge_deps() {
-    install_pkgs="$(echo "${PKG}" | tr ',' ' ') $(echo "${EMERGE}" | tr ',' ' ')"
-    install_pkgs=$(echo "$install_pkgs" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    install_pkgs=$(merge_lists "$PKG" "$EMERGE")
     if [ -n "${install_pkgs}" ]; then
         echo "Installing packages: ${install_pkgs}"
         emerge --quiet ${install_pkgs}
@@ -79,8 +115,7 @@ install_emerge_deps() {
 
 
 install_rpm_ostree_deps() {
-    install_pkgs="$(echo "${PKG}" | tr ',' ' ') $(echo "${RPM_OSTREE}" | tr ',' ' ')"
-    install_pkgs=$(echo "$install_pkgs" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    install_pkgs=$(merge_lists "$PKG" "$DNF" "$RPM_OSTREE")
     if [ -n "${install_pkgs}" ]; then
         echo "Installing packages: ${install_pkgs}"
         rpm-ostree install ${install_pkgs}
@@ -89,15 +124,14 @@ install_rpm_ostree_deps() {
 
 
 install_zypper_deps() {
-    install_pkgs="$(echo "${PKG}" | tr ',' ' ') $(echo "${ZYPPER}" | tr ',' ' ')"
-    install_pkgs=$(echo "$install_pkgs" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    install_pkgs=$(merge_lists "$PKG" "$ZYPPER")
     if [ -n "${install_pkgs}" ]; then
         echo "Installing packages: ${install_pkgs}"
         zypper up -y
         zypper in -y ${install_pkgs}
     fi
-    install_patterns="$(echo "${ZYPPER_PATTERN}" | tr ',' ' ')"
-    install_patterns=$(echo "$install_patterns" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+    install_patterns=$(merge_lists "$ZYPPER_PATTERN")
     if [ -n "${install_patterns}" ]; then
         echo "Installing patterns: ${install_patterns}"
         zypper in -y -t pattern ${install_patterns}
@@ -106,8 +140,7 @@ install_zypper_deps() {
 
 
 install_apk_deps() {
-    install_pkgs="$(echo "${PKG}" | tr ',' ' ') $(echo "${APK}" | tr ',' ' ')"
-    install_pkgs=$(echo "$install_pkgs" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    install_pkgs=$(merge_lists "$PKG" "$APK")
     if [ -n "${install_pkgs}" ]; then
         echo "Installing packages: ${install_pkgs}"
         apk add --no-cache ${install_pkgs}
@@ -115,44 +148,30 @@ install_apk_deps() {
 }
 
 
-detect_distro() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        echo "$ID"
+install_deps() {
+    if command -v apt-get >/dev/null 2>&1; then
+            install_apt_deps
+    elif command -v pacman >/dev/null 2>&1; then
+            install_pacman_deps
+    elif command -v rpm-ostree >/dev/null 2>&1; then
+            install_rpm_ostree_deps
+    elif command -v dnf >/dev/null 2>&1; then
+            install_dnf_deps
+    elif command -v yum >/dev/null 2>&1; then
+            install_yum_deps
+    elif command -v microdnf >/dev/null 2>&1; then
+            install_microdnf_deps
+    elif command -v emerge >/dev/null 2>&1; then
+            install_emerge_deps
+    elif command -v zypper >/dev/null 2>&1; then
+            install_zypper_deps
+    elif command -v apk >/dev/null 2>&1; then
+            install_apk_deps
     else
-        echo "unknown"
+        echo "Unsupported package manager. Please install dependencies manually."
+        exit 1
     fi
 }
 
 
-install_deps() {
-    distro=$(detect_distro)
-    case "$distro" in
-        ubuntu|debian)
-            install_apt_deps
-            ;;
-        arch)
-            install_pacman_deps
-            ;;
-        fedora|centos|rhel|almalinux|rocky)
-            install_dnf_deps
-            ;;
-        gentoo)
-            install_emerge_deps
-            ;;
-        opensuse*|sles*)
-            install_zypper_deps
-            ;;
-        alpine)
-            install_apk_deps
-            ;;
-        *)
-            echo "Unsupported distribution: $distro"
-            exit 1
-            ;;
-    esac
-}
-
-
-# Install dependencies for openSUSE/SLE
 install_deps

@@ -34,5 +34,14 @@
                 "pacman": "zip"
             }
         }
+    },
+    "rocky": {
+        "image": "rockylinux:9.3.20231119-minimal",
+        "features": {
+            "pkg": {
+                "pkg": "jq",
+                "dnf": "zip"
+            }
+        }
     }
 }

@@ -14,130 +14,6 @@ remote_user_do() {
 }
 
 
-# Detect the Linux distribution
-distro_detect() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        echo "$ID"
-    else
-        echo "unknown"
-    fi
-}
-
-
-# Install dependencies for Ubuntu/Debian
-install_deps_apt() {
-    export DEBIAN_FRONTEND=noninteractive
-    local pkgs=(
-        wget
-        sudo
-    )
-    apt-get update
-    apt-get install -y "${pkgs[@]}"
-    rm -rf /var/lib/apt/lists/*
-}
-
-
-# Install dependencies for Arch Linux
-install_deps_pacman() {
-    local pkgs=(
-        wget
-        sudo
-    )
-    pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed "${pkgs[@]}"
-}
-
-
-# Install dependencies for Fedora/CentOS/RHEL and compatibles
-install_deps_dnf() {
-    local pkgs=(
-        wget
-        sudo
-    )
-    if command -v dnf > /dev/null 2>&1; then
-        dnf check-update || true
-        dnf install -y "${pkgs[@]}"
-    elif command -v yum > /dev/null 2>&1; then
-        yum install -y "${pkgs[@]}"
-    elif command -v microdnf > /dev/null 2>&1; then
-        microdnf install -y "${pkgs[@]}"
-    else
-        echo "Neither dnf/yum/microdnf is available to install dependencies."
-        exit 1
-    fi
-}
-
-
-# Install dependencies for Alpine Linux
-install_deps_apk() {
-    local pkgs=(
-        wget
-        sudo
-    )
-    apk add --no-cache "${pkgs[@]}"
-}
-
-
-# Install dependencies for OpenSUSE/SLES
-install_deps_zypper() {
-    local pkgs=(
-        wget
-        sudo
-    )
-    zypper refresh
-    zypper install -y "${pkgs[@]}"
-}
-
-
-# Install dependencies for microdnf-based images
-install_deps_microdnf() {
-    local pkgs=(
-        wget
-        sudo
-    )
-    microdnf install -y "${pkgs[@]}"
-}
-
-
-# Ensure wget is installed for downloading the installer
-prepare_deps() {
-    if command -v wget > /dev/null 2>&1 && command -v sudo > /dev/null 2>&1; then
-        return
-    fi
-
-    local distro
-    distro=$(distro_detect)
-    case "$distro" in
-        ubuntu|debian)
-            install_deps_apt
-            ;;
-        arch)
-            install_deps_pacman
-            ;;
-        fedora|centos|rhel|almalinux|rocky)
-            install_deps_dnf
-            ;;
-        opensuse*|sles)
-            install_deps_zypper
-            ;;
-        alpine)
-            install_deps_apk
-            ;;
-        *)
-            echo "wget/sudo is missing and could not be installed for distro: $distro"
-            echo "Please install dependencies manually."
-            exit 1
-            ;;
-    esac
-
-    if ! command -v wget > /dev/null 2>&1; then
-        echo "wget is missing after dependency installation."
-        exit 1
-    fi
-}
-
-
 # Download and run the Miniforge installer
 install_mamba() {
     local version="${VERSION:-latest}"
@@ -152,7 +28,7 @@ install_mamba() {
         install_script_url="https://github.com/conda-forge/miniforge/releases/download/${version}/Miniforge3-${version}-$(uname)-$(uname -m).sh"
     fi
 
-    wget "${install_script_url}" -O /tmp/miniforge.sh
+    curl -fsSL "${install_script_url}" -o /tmp/miniforge.sh
 
     echo "Running Miniforge installer..."
     chmod +x /tmp/miniforge.sh
@@ -202,7 +78,6 @@ init_shells() {
     if check_is_new_init; then
         echo "Using new mamba shell init method."
         init_command="${mamba_path} shell init -s"
-        shell_init_opts="-s"
     else
         echo "Using legacy conda shell init method."
         init_command="${mamba_path} init"
@@ -247,7 +122,6 @@ init_shells() {
 
 
 echo "Activating feature 'mamba'"
-prepare_deps
 install_mamba
 init_shells
 echo "Done!"
