@@ -35,7 +35,7 @@ post_install_deps() {
             ;;
         gentoo)
             if ! command -v gfortran >/dev/null 2>&1; then
-                emerge -av sys-devel/gcc[fortran]
+                emerge --quiet sys-devel/gcc[fortran]
             fi
             ;;
         almalinux|rocky)
