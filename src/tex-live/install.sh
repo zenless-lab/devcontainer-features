@@ -163,19 +163,19 @@ install_texlive() {
     install_options+=("--no-interaction")
     install_options+=("--scheme" "${SCHEME}")
     install_options+=("--paper" "${PAPER}")
-    
+
     if [ "${DOC_INSTALL}" = "0" ] || [ "${DOC_INSTALL}" = "false" ]; then
         install_options+=("--no-doc-install")
     else
         install_options+=("--doc-install")
     fi
-    
+
     if [ "${SRC_INSTALL}" = "0" ] || [ "${SRC_INSTALL}" = "false" ]; then
         install_options+=("--no-src-install")
     else
         install_options+=("--src-install")
     fi
-    
+
     if [ "${REPO_URL}" != "automatic" ]; then
         install_options+=("--repository" "${REPO_URL}")
     fi

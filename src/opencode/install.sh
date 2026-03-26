@@ -198,7 +198,7 @@ add_to_path() {
 # Initialize shell(s) to include OpenCode in PATH
 init_shell() {
     local shells=()
-    
+
     if [ "$SHELL_INIT" = "automatic" ]; then
         IFS=' ' read -r -a shells <<< "$(detect_installed_shell)"
     else
