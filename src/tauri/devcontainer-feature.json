@@ -16,9 +16,11 @@
             "zypper": "webkit2gtk3-devel,libopenssl-devel,curl,wget,file,libappindicator3-1,librsvg-devel,xdg-utils",
             "zypperPattern": "devel_basis",
             "apk": "build-base,webkit2gtk-4.1-dev,curl,wget,file,openssl,libayatana-appindicator-dev,librsvg,xdg-utils"
-        }
+        },
+        "ghcr.io/devcontainers/features/rust:1": {},
+        "ghcr.io/devcontainers/features/node:1": {}
     },
     "installsAfter": [
-        "ghcr.io/devcontainers/features/rust"
+        "ghcr.io/devcontainers/features/common-utils"
     ]
 }
