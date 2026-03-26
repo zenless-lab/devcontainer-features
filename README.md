@@ -42,7 +42,7 @@ Features are individually versioned by the `version` attribute in a Feature's `d
 
 Features are hosted on GitHub Container Registry (GHCR).
 
-This repo contains a **GitHub Action** [workflow](.github/workflows/release.yaml) that will publish each Feature to GHCR. 
+This repo contains a **GitHub Action** [workflow](.github/workflows/release.yaml) that will publish each Feature to GHCR.
 
 By default, each Feature will be prefixed with the `zenless-lab/devcontainer-features` namespace.  For example, the features in this repository can be referenced in a `devcontainer.json` with:
 

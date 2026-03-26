@@ -68,26 +68,26 @@ install_pacman_deps() {
 
 install_dnf_deps() {
     local pkgs=(
-        redhat-rpm-config 
-        readline-devel 
-        ncurses-devel 
-        zlib-devel 
-        libcurl-devel 
-        libXt-devel 
-        make 
-        gcc 
-        gcc-c++ 
-        gcc 
-        gcc-gfortran 
-        perl-devel 
-        perl-Devel-CheckLib 
-        perl-DirHandle 
-        perl-Env 
-        perl-ExtUtils-MakeMaker 
-        perl-File-Which 
-        python3-devel 
-        # python3-astropy 
-        python3-numpy 
+        redhat-rpm-config
+        readline-devel
+        ncurses-devel
+        zlib-devel
+        libcurl-devel
+        libXt-devel
+        make
+        gcc
+        gcc-c++
+        gcc
+        gcc-gfortran
+        perl-devel
+        perl-Devel-CheckLib
+        perl-DirHandle
+        perl-Env
+        perl-ExtUtils-MakeMaker
+        perl-File-Which
+        python3-devel
+        # python3-astropy
+        python3-numpy
         # python3-matplotlib
     )
     local pip_pkgs=(
@@ -176,7 +176,7 @@ install_apk_deps() {
         tcl-readline
     )
     apk add --no-cache "${pkgs[@]}"
-    # HACK: Linker fix: Alpine APK lacks libtclreadline.so.2.1.0. 
+    # HACK: Linker fix: Alpine APK lacks libtclreadline.so.2.1.0.
     #     Creating a symbolic link from the system-provided version to trick the HEASoft 'make' process.
     if [ ! -e '/usr/lib/libtclreadline-2.1.0.so' ]; then
         local source

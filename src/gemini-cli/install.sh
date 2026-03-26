@@ -3,233 +3,116 @@
 set -euo pipefail
 
 GEMINI_CLI_VERSION="${GEMINICLIVERSION:-latest}"
+SANDBOX_MODE="${SANDBOX:-false}"
+GEMINI_CLI_HOME="${GEMINICLIHOME:-}"
+
+readonly DEFAULT_PNPM_GLOBAL_DIR="/usr/local/share/pnpm-global"
+readonly DEFAULT_PNPM_GLOBAL_BIN_DIR="/usr/local/bin"
 
 
-# Execute command as remote user if specified
-remote_user_do() {
-	if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
-		sudo -i -u "${_REMOTE_USER}" -- "$@"
-	else
-		"$@"
+configure_sandbox_env() {
+	{
+		echo "export GEMINI_SANDBOX=\"${SANDBOX_MODE}\""
+		if [ -n "${GEMINI_CLI_HOME}" ]; then
+			echo "export GEMINI_CLI_HOME=\"${GEMINI_CLI_HOME}\""
+		fi
+	} > /etc/profile.d/gemini-cli.sh
+	chmod 644 /etc/profile.d/gemini-cli.sh
+
+	if [ -n "${GEMINI_CLI_HOME}" ]; then
+		mkdir -p "${GEMINI_CLI_HOME}"
+		chmod +rw "${GEMINI_CLI_HOME}"
 	fi
 }
 
 
-# Find the home directory of the remote user
-find_user_home() {
-	if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
-		echo "/home/${_REMOTE_USER}"
-	else
-		echo "/root"
-	fi
-}
+has_pnpm_global_config() {
+	local global_dir
+	local global_bin_dir
 
+	global_dir="$(pnpm config get global-dir 2>/dev/null || true)"
+	global_bin_dir="$(pnpm config get global-bin-dir 2>/dev/null || true)"
 
-# Resolve PNPM home directory
-resolve_pnpm_home() {
-	if [ -n "${PNPM_HOME:-}" ]; then
-		echo "$PNPM_HOME"
-		return
-	fi
-	if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
-		echo "$(find_user_home)/.local/share/pnpm"
-	else
-		echo "/usr/local/share/pnpm"
-	fi
-}
-
-
-# Detect the Linux distribution
-distro_detect() {
-	if [ -f /etc/os-release ]; then
-		. /etc/os-release
-		echo "$ID"
-	else
-		echo "unknown"
-	fi
-}
-
-
-# Install dependencies for Ubuntu/Debian
-install_deps_apt() {
-	export DEBIAN_FRONTEND=noninteractive
-	local pkgs=(
-		sudo
-		curl
-		ca-certificates
-	)
-	apt-get update
-	apt-get install -y "${pkgs[@]}"
-	rm -rf /var/lib/apt/lists/*
-}
-
-
-# Install dependencies for Arch Linux
-install_deps_pacman() {
-	local pkgs=(
-		sudo
-		curl
-		ca-certificates
-	)
-	pacman -Syu --noconfirm
-	pacman -S --noconfirm --needed "${pkgs[@]}"
-}
-
-
-# Install dependencies for Fedora/CentOS/RHEL
-install_deps_dnf() {
-	local pkgs=(
-		sudo
-		curl
-		ca-certificates
-	)
-	dnf check-update || true
-	dnf install -y "${pkgs[@]}"
-}
-
-
-# Install dependencies for Gentoo
-install_deps_emerge() {
-	local pkgs=(
-		app-admin/sudo
-		net-misc/curl
-		app-misc/ca-certificates
-	)
-	emerge --quiet "${pkgs[@]}"
-}
-
-
-# Install dependencies for RPM-OSTree systems
-install_deps_rpm_ostree() {
-	local pkgs=(
-		sudo
-		curl
-		ca-certificates
-	)
-	rpm-ostree install "${pkgs[@]}"
-
-	echo "Please reboot the system to complete the installation."
-}
-
-
-# Install dependencies for OpenSUSE/SLES
-install_deps_zypper() {
-	local pkgs=(
-		sudo
-		curl
-		ca-certificates
-	)
-	zypper up -y
-	zypper in -y "${pkgs[@]}"
-}
-
-
-# Install dependencies for Alpine Linux
-install_deps_apk() {
-	local pkgs=(
-		sudo
-		curl
-		ca-certificates
-	)
-	apk add --no-cache "${pkgs[@]}"
-}
-
-
-# Main installation function
-install_deps() {
-	local distro
-	distro=$(distro_detect)
-	case "$distro" in
-		ubuntu|debian)
-			install_deps_apt
+	case "${global_dir}" in
+		""|undefined|null)
+			return 1
 			;;
-		arch)
-			install_deps_pacman
+	esac
+
+	case "${global_bin_dir}" in
+		""|undefined|null)
+			return 1
 			;;
-		fedora|centos|rhel)
-			install_deps_dnf
-			;;
-		gentoo)
-			install_deps_emerge
-			;;
-		almalinux|rocky)
-			install_deps_dnf
-			;;
-		opensuse*|sles)
-			install_deps_zypper
-			;;
-		alpine)
-			install_deps_apk
+	esac
+
+	return 0
+}
+
+
+resolve_pnpm_config_value() {
+	local key="$1"
+	local fallback="$2"
+	local value
+
+	value="$(pnpm config get "${key}" 2>/dev/null || true)"
+	case "${value}" in
+		""|undefined|null)
+			echo "${fallback}"
 			;;
 		*)
-			echo "Unsupported or unknown distribution: $distro"
-			echo "Please install dependencies manually."
-			exit 1
+			echo "${value}"
 			;;
 	esac
 }
 
 
-# Configure PNPM environment variables and PATH
-configure_pnpm_path() {
-    local pnpm_home=$(resolve_pnpm_home)
-    {
-        echo 'export PNPM_HOME="'"${pnpm_home}"'"'
-        echo 'case ":$PATH:" in'
-        echo '    *":$PNPM_HOME:"*) ;;'
-        echo '    *) export PATH="$PNPM_HOME:$PATH" ;;'
-        echo 'esac'
-    } > /etc/profile.d/pnpm.sh
-	chmod 644 /etc/profile.d/pnpm.sh
-}
-
-
-# Install PNPM
-install_pnpm() {
-	# Check pnpm availability in the remote user context, since pnpm will be
-	# invoked via remote_user_do later (e.g., in install_node/install_gemini_cli).
-	if remote_user_do pnpm --version >/dev/null 2>&1; then
-		echo "pnpm already installed for remote user. Skipping pnpm installation."
-		return 0
+configure_pnpm_global_dirs() {
+	if has_pnpm_global_config; then
+		echo "pnpm global directories already configured. Reusing existing configuration."
+		return
 	fi
-	local pnpm_home
-	pnpm_home=$(resolve_pnpm_home)
 
-	echo "Installing latest pnpm version"
-	remote_user_do env PNPM_HOME="$pnpm_home" PATH="$pnpm_home:$PATH" \
-		bash -c "curl -fsSL https://get.pnpm.io/install.sh | bash -"
-	export PNPM_HOME="$pnpm_home"
-	export PATH="$PNPM_HOME:$PATH"
+	mkdir -p "${DEFAULT_PNPM_GLOBAL_DIR}"
+	chmod 755 "${DEFAULT_PNPM_GLOBAL_DIR}"
+	pnpm config set global-dir "${DEFAULT_PNPM_GLOBAL_DIR}"
+	pnpm config set global-bin-dir "${DEFAULT_PNPM_GLOBAL_BIN_DIR}"
 }
 
 
-# Install Node.js using PNPM
-install_node() {
-	echo "Installing Node.js version: lts"
-    local distro
-    distro=$(distro_detect)
-    if [ "$distro" = "alpine" ]; then
-        echo "Installing Node.js from Alpine repository"
-        apk add --no-cache nodejs npm
-    else
-	    remote_user_do pnpm env use --global lts
-    fi
+export_pnpm_runtime_env() {
+	local global_dir
+	local global_bin_dir
+
+	global_dir="$(resolve_pnpm_config_value global-dir "${DEFAULT_PNPM_GLOBAL_DIR}")"
+	global_bin_dir="$(resolve_pnpm_config_value global-bin-dir "${DEFAULT_PNPM_GLOBAL_BIN_DIR}")"
+
+	mkdir -p "${global_dir}" "${global_bin_dir}"
+	export PNPM_HOME="${global_bin_dir}"
+	case ":${PATH}:" in
+		*":${PNPM_HOME}:"*)
+			;;
+		*)
+			export PATH="${PNPM_HOME}:${PATH}"
+			;;
+	esac
 }
 
 
-# Install Gemini CLI using PNPM
 install_gemini_cli() {
-	echo "Installing Gemini CLI version: $GEMINI_CLI_VERSION"
-	if [ "$GEMINI_CLI_VERSION" = "latest" ]; then
-		remote_user_do pnpm add -g @google/gemini-cli
-	else
-		remote_user_do pnpm add -g @google/gemini-cli@"$GEMINI_CLI_VERSION"
+	local package_spec="@google/gemini-cli"
+
+	if [ "${GEMINI_CLI_VERSION}" != "latest" ]; then
+		package_spec="${package_spec}@${GEMINI_CLI_VERSION}"
 	fi
+
+	echo "Installing ${package_spec} with pnpm"
+	pnpm add -g "${package_spec}"
 }
 
-# Main script execution
-install_deps
-configure_pnpm_path
-install_pnpm
-install_node
+
+echo "Activating feature 'gemini-cli'"
+configure_sandbox_env
+configure_pnpm_global_dirs
+export_pnpm_runtime_env
 install_gemini_cli
+echo "Finished installing Gemini CLI"

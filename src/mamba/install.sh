@@ -142,7 +142,7 @@ prepare_deps() {
 install_mamba() {
     local version="${VERSION:-latest}"
     local install_script_url=""
-    
+
     echo "Installing mamba version: $version"
     echo "Downloading and installing Miniforge..."
     # Determine URL based on version
@@ -153,7 +153,7 @@ install_mamba() {
     fi
 
     wget "${install_script_url}" -O /tmp/miniforge.sh
-    
+
     echo "Running Miniforge installer..."
     chmod +x /tmp/miniforge.sh
     # Run installer in batch mode
@@ -207,7 +207,7 @@ init_shells() {
         echo "Using legacy conda shell init method."
         init_command="${mamba_path} init"
     fi
-    
+
 
     for current_shell in $shells; do
         case "$current_shell" in
@@ -239,7 +239,7 @@ init_shells() {
                 remote_user_do ${init_command} powershell
                 ;;
             *)
-                echo "Shell $current_shell is not supported for initialization." 
+                echo "Shell $current_shell is not supported for initialization."
                 ;;
         esac
     done

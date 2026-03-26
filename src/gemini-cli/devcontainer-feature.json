@@ -1,6 +1,6 @@
 {
     "id": "gemini-cli",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "name": "Gemini CLI",
     "description": "Installs Google Gemini CLI.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/gemini-cli",
@@ -12,10 +12,27 @@
             ],
             "default": "latest",
             "description": "Select the Gemini CLI version to install."
+        },
+        "sandbox": {
+            "type": "string",
+            "enum": [
+                "false",
+                "runsc",
+                "docker"
+            ],
+            "default": "false",
+            "description": "Set the default GEMINI_SANDBOX value exported by the feature profile script."
+        },
+        "geminiCliHome": {
+            "type": "string",
+            "default": "",
+            "description": "Set GEMINI_CLI_HOME and pre-create its .gemini directory. Leave empty to avoid configuring GEMINI_CLI_HOME."
         }
     },
+    "dependsOn": {
+        "ghcr.io/devcontainers/features/node:1": {}
+    },
     "installsAfter": [
-        "ghcr.io/devcontainers/features/common-utils",
-        "ghcr.io/devcontainers/features/node"
+        "ghcr.io/devcontainers/features/common-utils"
     ]
 }
