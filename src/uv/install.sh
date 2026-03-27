@@ -12,6 +12,34 @@ PYTHON_VERSIONS="${PYTHONVERSION:-automatic}"
 uv_command=""
 
 
+require_command() {
+    local command_name="$1"
+
+    if ! command -v "${command_name}" >/dev/null 2>&1; then
+        echo "Missing required command: ${command_name}"
+        exit 1
+    fi
+}
+
+
+remote_user_name() {
+    if [ -n "${_REMOTE_USER:-}" ]; then
+        echo "${_REMOTE_USER}"
+    else
+        echo "root"
+    fi
+}
+
+
+set_remote_ownership() {
+    local target_path="$1"
+    local owner
+
+    owner="$(remote_user_name)"
+    chown -R "${owner}:$(id -gn "${owner}")" "${target_path}"
+}
+
+
 # Execute command as remote user if specified
 remote_user_do() {
     if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
@@ -30,101 +58,6 @@ find_user_home() {
     fi
 }
 
-
-# Detect the Linux distribution
-distro_detect() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        echo "$ID"
-    else
-        echo "unknown"
-    fi
-}
-
-
-# Install dependencies for Ubuntu/Debian
-install_deps_apt() {
-    export DEBIAN_FRONTEND=noninteractive
-    local pkgs=(
-        sudo
-        curl
-        ca-certificates
-    )
-    apt-get update
-    apt-get install -y "${pkgs[@]}"
-    rm -rf /var/lib/apt/lists/*
-}
-
-
-# Install dependencies for Arch Linux
-install_deps_pacman() {
-    local pkgs=(
-        sudo
-        curl
-        ca-certificates
-    )
-    pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed "${pkgs[@]}"
-}
-
-
-# Install dependencies for Fedora/CentOS/RHEL
-install_deps_dnf() {
-    local pkgs=(
-        sudo
-        curl
-        ca-certificates
-    )
-    dnf check-update || true
-    dnf install -y "${pkgs[@]}"
-}
-
-
-# Install dependencies for Gentoo
-install_deps_emerge() {
-    local pkgs=(
-        app-admin/sudo
-        net-misc/curl
-        app-misc/ca-certificates
-    )
-    emerge --quiet "${pkgs[@]}"
-}
-
-
-# Install dependencies for RPM-OSTree systems
-install_deps_rpm_ostree() {
-    local pkgs=(
-        sudo
-        curl
-        ca-certificates
-    )
-    rpm-ostree install "${pkgs[@]}"
-
-    echo "Please reboot the system to complete the installation."
-}
-
-
-# Install dependencies for OpenSUSE/SLES
-install_deps_zypper() {
-    local pkgs=(
-        sudo
-        curl
-        ca-certificates
-    )
-    zypper up -y
-    zypper in -y "${pkgs[@]}"
-}
-
-
-# Install dependencies for Alpine Linux
-install_deps_apk() {
-    local pkgs=(
-        sudo
-        curl
-        ca-certificates
-    )
-    apk add --no-cache "${pkgs[@]}"
-}
 
 
 detect_installed_shell() {
@@ -194,7 +127,7 @@ setup_autocompletion() {
         bash|zsh)
             echo 'eval "$(uv generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
             echo 'eval "$(uvx --generate-shell-completion '"$shell"')" ' >> "$(find_user_home)/.${shell}rc"
-            chown "${_REMOTE_USER:-root}": "$(find_user_home)/.${shell}rc"
+            set_remote_ownership "$(find_user_home)/.${shell}rc"
             ;;
         fish)
             if [ ! -d "$(find_user_home)/.config/fish/completions" ]; then
@@ -202,7 +135,7 @@ setup_autocompletion() {
             fi
             echo 'uv generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
             echo 'uvx --generate-shell-completion fish | source' >> "$(find_user_home)/.config/fish/config.fish"
-            chown -R "${_REMOTE_USER:-root}": "$(find_user_home)/.config"
+            set_remote_ownership "$(find_user_home)/.config"
             ;;
         elvish)
             if [ ! -d "$(find_user_home)/.elvish" ]; then
@@ -210,7 +143,7 @@ setup_autocompletion() {
             fi
             echo 'eval (uv generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
             echo 'eval (uvx --generate-shell-completion elvish | slurp)' >> "$(find_user_home)/.elvish/rc.elv"
-            chown -R "${_REMOTE_USER:-root}": "$(find_user_home)/.elvish"
+            set_remote_ownership "$(find_user_home)/.elvish"
             ;;
         *)
             echo "Shell $shell is not supported for autocompletion setup."
@@ -218,48 +151,11 @@ setup_autocompletion() {
     esac
 }
 
-install_deps() {
-    if command -v curl >/dev/null 2>&1 && command -v sudo >/dev/null 2>&1; then
-        echo "Dependencies already installed."
-        return
-    fi
-
-    echo "Installing dependencies for UV..."
-    local distro
-    distro=$(distro_detect)
-    case "$distro" in
-        ubuntu|debian)
-            install_deps_apt
-            ;;
-        arch)
-            install_deps_pacman
-            ;;
-        fedora|centos|rhel)
-            install_deps_dnf
-            ;;
-        gentoo)
-            install_deps_emerge
-            ;;
-        almalinux|rocky)
-            install_deps_dnf
-            ;;
-        opensuse*|sles)
-            install_deps_zypper
-            ;;
-        alpine)
-            install_deps_apk
-            ;;
-        *)
-            echo "Unsupported or unknown distribution: $distro"
-            echo "Please install dependencies manually."
-            exit 1
-            ;;
-    esac
-}
-
 install_uv() {
     local version="$UV_VERSION"
     local download_url=""
+
+    require_command curl
 
     echo "Installing UV version: $version"
 
@@ -327,7 +223,6 @@ init_autocompletion() {
 }
 
 # Main installation flow
-install_deps
 install_uv
 install_python_versions
 init_autocompletion

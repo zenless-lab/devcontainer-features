@@ -11,16 +11,18 @@ PAPER=${PAPER:-"a4"}
 DOC_INSTALL=${DOCINSTALL:-"true"}
 SRC_INSTALL=${SRCINSTALL:-"true"}
 REPO_URL=${REPOURL:-"automatic"}
+RESOLVED_REPO_URL=""
 
 
-DEPS=(
-    curl
-    ca-certificates
-    perl
-    xz-utils
-    gzip
-    tar
-)
+
+require_command() {
+    local command_name="$1"
+
+    if ! command -v "${command_name}" >/dev/null 2>&1; then
+        echo "Missing required command: ${command_name}"
+        exit 1
+    fi
+}
 
 
 get_remote_user_home() {
@@ -32,68 +34,6 @@ get_remote_user_home() {
 }
 
 
-detect_distro() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        echo "$ID"
-    else
-        echo "unknown"
-    fi
-}
-
-
-install_apt_deps() {
-    export DEBIAN_FRONTEND=noninteractive
-
-    echo "Installing dependencies: ${DEPS[*]}"
-    apt-get update
-    apt-get install -y "${DEPS[@]}"
-    rm -rf /var/lib/apt/lists/*
-}
-
-
-install_yum_deps() {
-    echo "Installing dependencies: ${DEPS[*]}"
-    yum install -y "${DEPS[@]}"
-    yum clean all
-}
-
-
-install_pacman_deps() {
-    echo "Installing dependencies: ${DEPS[*]}"
-    pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed "${DEPS[@]}"
-}
-
-
-install_dnf_deps() {
-    echo "Installing dependencies: ${DEPS[*]}"
-    dnf check-update || true
-    dnf install -y "${DEPS[@]}"
-}
-
-
-install_apk_deps() {
-    local apk_pkgs=(
-        curl
-        ca-certificates
-        perl
-        xz
-        gzip
-        tar
-    )
-    echo "Installing dependencies: ${apk_pkgs[*]}"
-    apk add --no-cache "${apk_pkgs[@]}"
-}
-
-
-install_zypper_deps() {
-    echo "Installing dependencies: ${DEPS[*]}"
-    zypper refresh
-    zypper install -y "${DEPS[@]}"
-}
-
-
 print_parameters() {
     echo "Installation parameters:"
     echo "  Scheme:       ${SCHEME}"
@@ -101,37 +41,6 @@ print_parameters() {
     echo "  Doc install:  ${DOC_INSTALL}"
     echo "  Src install:  ${SRC_INSTALL}"
     echo "  Repo URL:     ${REPO_URL}"
-}
-
-
-install_deps() {
-    local distro
-    distro=$(detect_distro)
-
-    case "${distro}" in
-        ubuntu|debian)
-            install_apt_deps
-            ;;
-        centos|rhel|rocky|almalinux)
-            install_yum_deps
-            ;;
-        fedora)
-            install_dnf_deps
-            ;;
-        arch)
-            install_pacman_deps
-            ;;
-        alpine)
-            install_apk_deps
-            ;;
-        opensuse*|sles)
-            install_zypper_deps
-            ;;
-        *)
-            echo "Unsupported distribution: ${distro}. Please install dependencies manually: ${DEPS[*]}"
-            exit 1
-            ;;
-    esac
 }
 
 
@@ -147,11 +56,27 @@ cleanup_texlive() {
 
 
 download_install_script() {
+    local download_url
+    local effective_url
+
     echo "Downloading TeX Live installation script..."
+    require_command curl
+    require_command tar
+    require_command perl
+    require_command xz
     rm -rf "${TEMP_DIR}"
     mkdir -p "${TEMP_DIR}"
-    curl -L -o "${TEMP_DIR}/install-tl-unx.tar.gz" "${INSTALL_SCRIPT_URL}"
+    download_url="${INSTALL_SCRIPT_URL}"
+    effective_url=$(curl -fsSL -w '%{url_effective}' -o "${TEMP_DIR}/install-tl-unx.tar.gz" "${download_url}")
     tar xf "${TEMP_DIR}/install-tl-unx.tar.gz" -C "${TEMP_DIR}" --strip-components=1
+
+    if [ "${REPO_URL}" = "automatic" ]; then
+        RESOLVED_REPO_URL=${effective_url%/install-tl-unx.tar.gz}
+        echo "Resolved TeX Live repository: ${RESOLVED_REPO_URL}"
+    else
+        RESOLVED_REPO_URL=${REPO_URL}
+    fi
+
     echo "TeX Live installation script downloaded."
 }
 
@@ -176,8 +101,8 @@ install_texlive() {
         install_options+=("--src-install")
     fi
 
-    if [ "${REPO_URL}" != "automatic" ]; then
-        install_options+=("--repository" "${REPO_URL}")
+    if [ -n "${RESOLVED_REPO_URL}" ]; then
+        install_options+=("--repository" "${RESOLVED_REPO_URL}")
     fi
 
     perl "${TEMP_DIR}/install-tl" "${install_options[@]}"
@@ -210,7 +135,6 @@ post_install_configuration() {
 # Main execution
 echo "Starting TeX Live installation..."
 print_parameters
-install_deps
 cleanup_texlive
 download_install_script
 install_texlive

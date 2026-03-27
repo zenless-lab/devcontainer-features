@@ -8,11 +8,24 @@ SHELL_INIT=${SHELLINIT:-"automatic"}
 
 INSTALL_SCRIPT_URL="https://opencode.ai/install"
 
-PKGS=(
-    sudo
-    curl
-    ca-certificates
-)
+
+require_command() {
+    local command_name="$1"
+
+    if ! command -v "${command_name}" >/dev/null 2>&1; then
+        echo "Missing required command: ${command_name}"
+        exit 1
+    fi
+}
+
+
+remote_user_name() {
+    if [ -n "${_REMOTE_USER:-}" ]; then
+        echo "${_REMOTE_USER}"
+    else
+        echo "root"
+    fi
+}
 
 
 # Detect user home directory
@@ -27,119 +40,32 @@ detect_user_home() {
 
 # Execute command as remote user if specified
 remote_user_do() {
-    sudo -i -u "${_REMOTE_USER}" -- "$@"
-}
-
-
-# Detect the Linux distribution
-distro_detect() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        echo "$ID"
+    if [ -n "${_REMOTE_USER:-}" ] && [ "${_REMOTE_USER}" != "root" ]; then
+        sudo -i -u "${_REMOTE_USER}" -- "$@"
     else
-        echo "unknown"
+        "$@"
     fi
 }
 
+set_path_file_owner() {
+    local target_path="$1"
+    local owner
 
-# Install dependencies for Ubuntu/Debian
-install_deps_apt() {
-    export DEBIAN_FRONTEND=noninteractive
-    apt-get update
-    apt-get install -y "${PKGS[@]}"
-    rm -rf /var/lib/apt/lists/*
-}
-
-
-# Install dependencies for Arch Linux
-install_deps_pacman() {
-    pacman -Syu --noconfirm
-    pacman -S --noconfirm --needed "${PKGS[@]}"
-}
-
-
-# Install dependencies for Fedora/CentOS/RHEL
-install_deps_dnf() {
-    dnf check-update || true
-    dnf install -y "${PKGS[@]}"
-}
-
-
-# Install dependencies for Gentoo
-install_deps_emerge() {
-    local emerge_pkgs=(
-        sudo
-        net-misc/curl
-        app-misc/ca-certificates
-    )
-    emerge --quiet "${emerge_pkgs[@]}"
-}
-
-
-# Install dependencies for RPM-OSTree systems
-install_deps_rpm_ostree() {
-    rpm-ostree install "${PKGS[@]}"
-
-    echo "Please reboot the system to complete the installation."
-}
-
-
-# Install dependencies for OpenSUSE/SLES
-install_deps_zypper() {
-    zypper up -y
-    zypper in -y "${PKGS[@]}"
-}
-
-
-# Install dependencies for Alpine Linux
-install_deps_apk() {
-    apk add --no-cache "${PKGS[@]}"
-}
-
-
-# Main installation function
-install_deps() {
-    local distro
-    distro=$(distro_detect)
-    case "$distro" in
-        ubuntu|debian)
-            install_deps_apt
-            ;;
-        arch)
-            install_deps_pacman
-            ;;
-        fedora|centos|rhel)
-            install_deps_dnf
-            ;;
-        gentoo)
-            install_deps_emerge
-            ;;
-        almalinux|rocky)
-            install_deps_dnf
-            ;;
-        opensuse*|sles)
-            install_deps_zypper
-            ;;
-        alpine)
-            install_deps_apk
-            ;;
-        *)
-            echo "Unsupported or unknown distribution: $distro"
-            echo "Please install dependencies manually."
-            exit 1
-            ;;
-    esac
+    owner="$(remote_user_name)"
+    chown "${owner}:$(id -gn "${owner}")" "${target_path}"
 }
 
 
 # Install OpenCode
 install_opencode() {
     echo "Installing OpenCode version: $OPENCODE_VERSION"
+    require_command curl
+
     if [ "$OPENCODE_VERSION" = "latest" ]; then
-        remote_user_do curl -fsSL "$INSTALL_SCRIPT_URL" | remote_user_do bash -s -- --no-modify-path
+        curl -fsSL "$INSTALL_SCRIPT_URL" | remote_user_do bash -s -- --no-modify-path
     else
         echo "specific version detected: $OPENCODE_VERSION"
-        remote_user_do curl -fsSL "$INSTALL_SCRIPT_URL" | remote_user_do bash -s -- --version "$OPENCODE_VERSION" --no-modify-path
+        curl -fsSL "$INSTALL_SCRIPT_URL" | remote_user_do bash -s -- --version "$OPENCODE_VERSION" --no-modify-path
     fi
 }
 
@@ -178,15 +104,14 @@ add_to_path() {
 
     if [ ! -f "$config_file" ]; then
         touch "$config_file"
-        chown "$(id -u ${_REMOTE_USER}):$(id -g ${_REMOTE_USER})" "$config_file"
+        set_path_file_owner "$config_file"
     fi
 
     if grep -Fxq "$command" "$config_file"; then
         echo "Path already set in $config_file"
     elif [[ -w $config_file ]]; then
-        remote_user_do echo -e "\n# opencode" >> "$config_file"
-        remote_user_do echo "$command" >> "$config_file"
-        chown "$(id -u ${_REMOTE_USER}):$(id -g ${_REMOTE_USER})" "$config_file"
+        printf '\n# opencode\n%s\n' "$command" >> "$config_file"
+        set_path_file_owner "$config_file"
         echo "Added CMD to $config_file"
     else
         echo "CMD to add to $config_file:"
@@ -237,7 +162,6 @@ init_shell() {
 
 # Main script execution
 echo "Activating feature 'opencode'"
-install_deps
 install_opencode
 init_shell
 echo "OpenCode installation and initialization complete."
