@@ -7,7 +7,7 @@ Installs system packages on various Linux distributions.
 
 ```json
 "features": {
-    "ghcr.io/zenless-lab/devcontainer-features/pkg:1": {}
+    "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {}
 }
 ```
 
@@ -15,17 +15,17 @@ Installs system packages on various Linux distributions.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| pkg | Comma-separated list of packages to install on any distribution. | string | - |
-| apt | Comma-separated list of packages to install on Debian/Ubuntu (apt). | string | - |
-| pacman | Comma-separated list of packages to install on Arch Linux (pacman). | string | - |
-| dnf | Comma-separated list of packages to install on Fedora/RHEL/CentOS (dnf). | string | - |
-| dnfGroup | Comma-separated list of groups to install on Fedora/RHEL/CentOS (dnf). | string | - |
-| yum | Comma-separated list of packages to install via yum. | string | - |
-| emerge | Comma-separated list of packages to install on Gentoo (emerge). | string | - |
-| rpmOstree | Comma-separated list of packages to install via rpm-ostree. | string | - |
-| zypper | Comma-separated list of packages to install on openSUSE (zypper). | string | - |
-| zypperPattern | Comma-separated list of patterns to install on openSUSE (zypper). | string | - |
-| apk | Comma-separated list of packages to install on Alpine Linux (apk). | string | - |
+| pkg | Space-separated list of packages to install on any distribution. | string | - |
+| apt | Space-separated list of packages to install on Debian/Ubuntu (apt). | string | - |
+| pacman | Space-separated list of packages to install on Arch Linux (pacman). | string | - |
+| dnf | Space-separated list of packages to install on Fedora/RHEL/CentOS (dnf). | string | - |
+| dnfGroup | Space-separated list of groups to install on Fedora/RHEL/CentOS (dnf). Use quotes for group names that contain spaces. | string | - |
+| yum | Space-separated list of packages to install via yum. | string | - |
+| emerge | Space-separated list of packages to install on Gentoo (emerge). | string | - |
+| rpmOstree | Space-separated list of packages to install via rpm-ostree. | string | - |
+| zypper | Space-separated list of packages to install on openSUSE (zypper). | string | - |
+| zypperPattern | Space-separated list of patterns to install on openSUSE (zypper). Use quotes for pattern names that contain spaces. | string | - |
+| apk | Space-separated list of packages to install on Alpine Linux (apk). | string | - |
 
 
 
