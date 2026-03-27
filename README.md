@@ -6,6 +6,7 @@ This repository contains a collection of dev container Features.
 
 | Feature | Id | Description |
 |---|---|---|
+| [chezmoi](src/chezmoi) | `chezmoi` | Installs chezmoi and optionally enables workspace development mode. |
 | [Gemini CLI](src/gemini-cli) | `gemini-cli` | Installs Google Gemini CLI. |
 | [HEASoft](src/heasoft) | `heasoft` | Installs HEASoft, the HEASARC high-energy astrophysics software suite. |
 | [Mamba](src/mamba) | `mamba` | Installs Mamba, a fast, robust, and cross-platform package manager. |

@@ -1,0 +1,10 @@
+{
+    "dev_mode": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "chezmoi": {
+                "devMode": true
+            }
+        }
+    }
+}
