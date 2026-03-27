@@ -1,64 +1,64 @@
 {
     "name": "System Packages",
     "id": "pkg",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "Installs system packages on various Linux distributions.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/pkg",
     "options": {
         "pkg": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install on any distribution."
+            "description": "Space-separated list of packages to install on any distribution."
         },
         "apt": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install on Debian/Ubuntu (apt)."
+            "description": "Space-separated list of packages to install on Debian/Ubuntu (apt)."
         },
         "pacman": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install on Arch Linux (pacman)."
+            "description": "Space-separated list of packages to install on Arch Linux (pacman)."
         },
         "dnf": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install on Fedora/RHEL/CentOS (dnf)."
+            "description": "Space-separated list of packages to install on Fedora/RHEL/CentOS (dnf)."
         },
         "dnfGroup": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of groups to install on Fedora/RHEL/CentOS (dnf)."
+            "description": "Space-separated list of groups to install on Fedora/RHEL/CentOS (dnf). Use quotes for group names that contain spaces."
         },
         "yum": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install via yum."
+            "description": "Space-separated list of packages to install via yum."
         },
         "emerge": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install on Gentoo (emerge)."
+            "description": "Space-separated list of packages to install on Gentoo (emerge)."
         },
         "rpmOstree": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install via rpm-ostree."
+            "description": "Space-separated list of packages to install via rpm-ostree."
         },
         "zypper": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install on openSUSE (zypper)."
+            "description": "Space-separated list of packages to install on openSUSE (zypper)."
         },
         "zypperPattern": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of patterns to install on openSUSE (zypper)."
+            "description": "Space-separated list of patterns to install on openSUSE (zypper). Use quotes for pattern names that contain spaces."
         },
         "apk": {
             "type": "string",
             "default": "",
-            "description": "Comma-separated list of packages to install on Alpine Linux (apk)."
+            "description": "Space-separated list of packages to install on Alpine Linux (apk)."
         }
     }
 }

@@ -3,7 +3,7 @@
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "pkg": {
-                "pkg": "jq",
+                "pkg": "jq unzip",
                 "apt": "zip"
             }
         }
@@ -12,7 +12,7 @@
         "image": "mcr.microsoft.com/devcontainers/base:alpine",
         "features": {
             "pkg": {
-                "pkg": "jq",
+                "pkg": "jq unzip",
                 "apk": "zip"
             }
         }
@@ -21,7 +21,7 @@
         "image": "fedora:latest",
         "features": {
             "pkg": {
-                "pkg": "jq",
+                "pkg": "jq unzip",
                 "dnf": "zip"
             }
         }
@@ -30,7 +30,7 @@
         "image": "archlinux:base",
         "features": {
             "pkg": {
-                "pkg": "jq",
+                "pkg": "jq unzip",
                 "pacman": "zip"
             }
         }

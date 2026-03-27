@@ -8,6 +8,10 @@ source dev-container-features-test-lib
 check "jq" command -v jq
 check "jq version" jq --version
 
+# Test if 'unzip' is installed (from 'pkg' option)
+check "unzip" command -v unzip
+check "unzip version" unzip -v
+
 # Test if 'zip' is installed (from distro specific option)
 check "zip" command -v zip
 # zip -v outputs a lot of text, but exit code 0 is enough
