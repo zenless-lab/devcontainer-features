@@ -2,9 +2,7 @@
     "with_rust_and_node_feature": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
-            "tauri": {},
-            "ghcr.io/devcontainers/features/node:1": {},
-            "ghcr.io/devcontainers/features/rust:1": {}
+            "tauri": {}
         }
     }
 }
