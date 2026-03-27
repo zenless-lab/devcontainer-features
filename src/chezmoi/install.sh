@@ -6,7 +6,7 @@ set -euo pipefail
 DEVMODE=${DEVMODE:-false}
 CHEZMOI_INSTALL_DIR=/usr/local/bin
 CHEZMOI_PROFILE_SCRIPT=/etc/profile.d/chezmoi-dev-mode.sh
-CHEZMOI_INSTALL_URL=get.chezmoi.io
+CHEZMOI_INSTALL_URL=https://get.chezmoi.io
 CHEZMOI_INSTALLER_SCRIPT=
 
 
