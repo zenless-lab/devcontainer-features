@@ -26,6 +26,15 @@
             }
         }
     },
+    "rockylinux": {
+        "image": "rockylinux:9.3.20231119-minimal",
+        "features": {
+            "pkg": {
+                "pkg": "jq unzip",
+                "dnf": "zip"
+            }
+        }
+    },
     "arch": {
         "image": "archlinux:base",
         "features": {
