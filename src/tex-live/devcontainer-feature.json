@@ -15,7 +15,7 @@
                 "minimal",
                 "infraonly"
             ],
-            "default": "minimal",
+            "default": "small",
             "description": "Select the TeX Live scheme to install."
         },
         "paper": {
