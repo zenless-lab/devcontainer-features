@@ -12,6 +12,11 @@ Installs the official chezmoi binary into /usr/local/bin.
 }
 ```
 
+## Feature Options
+
+| Option   | Type    | Default | Description                                                                 |
+|---------|---------|---------|-----------------------------------------------------------------------------|
+| devMode | boolean | false   | Enable development mode; creates a shell alias so chezmoi uses the workspace as its source. |
 ## Development Mode
 
 When `devMode` is `true`, the feature creates `/etc/profile.d/chezmoi-dev-mode.sh` with:
