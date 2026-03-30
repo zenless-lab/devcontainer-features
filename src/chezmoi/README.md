@@ -15,7 +15,7 @@ Installs chezmoi and optionally enables workspace development mode.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| devMode | If true, adds a global alias so chezmoi uses the current working directory as the source directory. | boolean | false |
+| devMode | If true, writes a chezmoi config file so chezmoi uses the current working directory as the source directory. | boolean | false |
 
 
 
