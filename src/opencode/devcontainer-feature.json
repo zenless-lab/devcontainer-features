@@ -1,6 +1,6 @@
 {
     "id": "opencode",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "name": "OpenCode",
     "description": "Installs OpenCode CLI",
     "options": {
@@ -18,6 +18,11 @@
             ],
             "default": "automatic",
             "description": "Initialize shell completions for the specified shell(s). Comma-separated list of shells or 'automatic' to detect the current shell."
+        }
+    },
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {
+            "pkg": "sudo curl ca-certificates"
         }
     },
     "installsAfter": [

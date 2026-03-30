@@ -24,6 +24,11 @@
             "description": "Select the shell(s) to initialize, separated by commas."
         }
     },
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {
+            "pkg": "wget sudo"
+        }
+    },
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils"
     ]

@@ -111,6 +111,25 @@ install_dnf_deps() {
     fi
 }
 
+install_microdnf_deps() {
+    install_pkgs=$(join_args "$PKG" "$DNF")
+
+    if [ -z "$install_pkgs" ]; then
+        log_info 'No microdnf packages requested.'
+        return
+    fi
+
+    if [ -n "$DNF_GROUP" ]; then
+        log_warn "Ignoring option 'dnfGroup' for detected package manager 'microdnf': ${DNF_GROUP}"
+    fi
+
+    log_info "Installing microdnf packages: ${install_pkgs}"
+    eval "set -- ${install_pkgs}"
+    microdnf install -y "$@"
+    log_info 'Cleaning microdnf cache.'
+    microdnf clean all
+}
+
 install_yum_deps() {
     install_pkgs=$(join_args "$PKG" "$YUM")
     if [ -z "$install_pkgs" ]; then
@@ -208,6 +227,11 @@ detect_package_manager() {
         return
     fi
 
+    if has_command microdnf; then
+        printf 'microdnf'
+        return
+    fi
+
     if has_command yum; then
         printf 'yum'
         return
@@ -262,6 +286,16 @@ warn_ignored_options() {
             warn_if_set 'rpmOstree' "$RPM_OSTREE"
             ;;
         dnf)
+            warn_if_set 'apt' "$APT"
+            warn_if_set 'apk' "$APK"
+            warn_if_set 'yum' "$YUM"
+            warn_if_set 'pacman' "$PACMAN"
+            warn_if_set 'zypper' "$ZYPPER"
+            warn_if_set 'zypperPattern' "$ZYPPER_PATTERN"
+            warn_if_set 'emerge' "$EMERGE"
+            warn_if_set 'rpmOstree' "$RPM_OSTREE"
+            ;;
+        microdnf)
             warn_if_set 'apt' "$APT"
             warn_if_set 'apk' "$APK"
             warn_if_set 'yum' "$YUM"
@@ -338,6 +372,9 @@ install_deps() {
             ;;
         dnf)
             install_dnf_deps
+            ;;
+        microdnf)
+            install_microdnf_deps
             ;;
         yum)
             install_yum_deps

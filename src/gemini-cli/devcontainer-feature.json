@@ -1,6 +1,6 @@
 {
     "id": "gemini-cli",
-    "version": "2.0.0",
+    "version": "0.1.0",
     "name": "Gemini CLI",
     "description": "Installs Google Gemini CLI.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/gemini-cli",

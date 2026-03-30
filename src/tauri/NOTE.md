@@ -16,5 +16,5 @@ This feature has no options.
 
 ## Overview
 
-- **Installation**: Detects the system package manager and installs the necessary libraries and tools.
-- **Dependencies**: Installs packages like `webkit2gtk`, `openssl`, `curl`, `wget`, `file`, `libappindicator`, `librsvg`, etc., required for Tauri development.
+- **Installation**: Uses `dependsOn` to pull in the repo's `pkg:2` feature for system libraries and the upstream `rust` and `node` features for toolchains.
+- **Dependencies**: Installs packages like `webkit2gtk`, `openssl`, `curl`, `wget`, `file`, `libappindicator`, `librsvg`, and `xdg-utils`, then provides Rust and Node.js automatically.
