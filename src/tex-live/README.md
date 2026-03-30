@@ -7,7 +7,7 @@ Installs TeX Live, a comprehensive TeX system.
 
 ```json
 "features": {
-    "ghcr.io/zenless-lab/devcontainer-features/tex-live:1": {}
+    "ghcr.io/zenless-lab/devcontainer-features/tex-live:0": {}
 }
 ```
 
@@ -15,7 +15,7 @@ Installs TeX Live, a comprehensive TeX system.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| scheme | Select the TeX Live scheme to install. | string | medium |
+| scheme | Select the TeX Live scheme to install. | string | small |
 | paper | Select the default paper size. | string | a4 |
 | docInstall | Install documentation. | boolean | true |
 | srcInstall | Install source files. | boolean | true |

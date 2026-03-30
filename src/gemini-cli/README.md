@@ -7,7 +7,7 @@ Installs Google Gemini CLI.
 
 ```json
 "features": {
-    "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:2": {}
+    "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:0": {}
 }
 ```
 

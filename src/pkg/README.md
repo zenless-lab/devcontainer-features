@@ -7,7 +7,7 @@ Installs system packages on various Linux distributions.
 
 ```json
 "features": {
-    "ghcr.io/zenless-lab/devcontainer-features/pkg:1": {}
+    "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {}
 }
 ```
 
