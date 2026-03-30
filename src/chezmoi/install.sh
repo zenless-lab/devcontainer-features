@@ -79,11 +79,13 @@ configure_dev_mode() {
     mkdir -p "${config_dir}"
     touch "${config_file}"
 
-    if ! grep -Fxq "sourceDir: ." "${config_file}"; then
+    if grep -Eq '^[[:space:]]*sourceDir:' "${config_file}"; then
+        sed -i 's|^[[:space:]]*sourceDir:.*$|sourceDir: .|' "${config_file}"
+    else
         echo "sourceDir: ." >> "${config_file}"
     fi
 
-    chown -R "${user_name}:${user_name}" "${config_dir}"
+    chown -R "${user_name}:" "${config_dir}"
 }
 
 
