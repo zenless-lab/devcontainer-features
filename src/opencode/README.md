@@ -7,7 +7,7 @@ Installs OpenCode CLI
 
 ```json
 "features": {
-    "ghcr.io/zenless-lab/devcontainer-features/opencode:1": {}
+    "ghcr.io/zenless-lab/devcontainer-features/opencode:0": {}
 }
 ```
 

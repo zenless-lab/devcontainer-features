@@ -7,7 +7,7 @@ Installs HEASoft (High Energy Astrophysics Science Archive Research Center).
 
 ```json
 "features": {
-    "ghcr.io/zenless-lab/devcontainer-features/heasoft:1": {}
+    "ghcr.io/zenless-lab/devcontainer-features/heasoft:0": {}
 }
 ```
 
