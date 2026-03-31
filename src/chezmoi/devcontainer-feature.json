@@ -1,6 +1,6 @@
 {
     "id": "chezmoi",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "name": "chezmoi",
     "description": "Installs chezmoi and optionally enables workspace development mode.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/chezmoi",
@@ -12,8 +12,8 @@
         }
     },
     "dependsOn": {
-        "ghcr.io/zenless-lab/devcontainer-features/pkg:1": {
-            "pkg": "curl,ca-certificates,git"
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {
+            "pkg": "curl ca-certificates git"
         }
     },
     "installsAfter": [
