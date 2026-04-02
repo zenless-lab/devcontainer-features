@@ -7,7 +7,6 @@ echo "Starting UV installation script..."
 
 UV_VERSION="${VERSION:-latest}"
 COMPLETION_SHELL="${COMPLETIONSHELL:-automatic}"
-PYTHON_VERSIONS="${PYTHONVERSION:-automatic}"
 
 uv_command=""
 
@@ -170,22 +169,10 @@ install_uv() {
     echo "UV installation completed."
 }
 
-install_python_versions() {
-    local versions_raw="$PYTHON_VERSIONS"
-
-    if [ -z "$versions_raw" ]; then
-        echo "Python installation skipped: empty version string."
-        return
-    fi
-
-    if [ "$versions_raw" != "automatic" ]; then
-        local versions=()
-        IFS=',' read -r -a versions <<< "$versions_raw"
-        remote_user_do $uv_command python install "${versions[@]}"
-        return
-    else
-        remote_user_do $uv_command python install
-    fi
+prepare_uv_dirs() {
+    mkdir -p /opt/uv/cache /opt/uv/python
+    set_remote_ownership /opt/uv
+    chmod -R o+rwX /opt/uv
 }
 
 init_autocompletion() {
@@ -224,7 +211,7 @@ init_autocompletion() {
 
 # Main installation flow
 install_uv
-install_python_versions
+prepare_uv_dirs
 init_autocompletion
 
 echo "UV installation script completed."
