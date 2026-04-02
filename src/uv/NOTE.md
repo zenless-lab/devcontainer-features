@@ -7,7 +7,6 @@ An extremely fast Python package installer and resolver, written in Rust.
 | Option | Description | Value Type | Default Value |
 |---|---|---|---|
 | version | Select the version of uv to install. | string | latest |
-| pythonVersion | Install Python versions using 'uv python install'. Comma-separated values; use 'automatic' to install the default Python with no arguments. | string | automatic |
 | completionShell | Install autocompletion for a specific shell, or try to detect automatically. | string | automatic |
 
 ## Usage
@@ -16,7 +15,6 @@ An extremely fast Python package installer and resolver, written in Rust.
 "features": {
     "ghcr.io/zenless-lab/devcontainer-features/uv:1": {
         "version": "latest",
-        "pythonVersion": "automatic",
         "completionShell": "automatic"
     }
 }
@@ -29,6 +27,8 @@ An extremely fast Python package installer and resolver, written in Rust.
 
 ## Notes
 
-`uv` installs Python interpreters outside the workspace and links them into the project `.venv` via symlinks. If you only install `uv`, those symlinks can break after each devcontainer restart. The next `uv sync` then sees a missing interpreter, deletes `.venv`, and recreates it. For ML projects with heavy dependencies like `pytorch`, that means long, repeated downloads/compiles.
+This feature installs `uv` only. It does not install Python automatically.
 
-Therefore, this feature installs a Python version during creation, and it should match the Python version pinned by your project. On restart, `uv` can reuse and relink the existing interpreter instead of deleting `.venv` and re-downloading dependencies.
+If your project pins a Python version, install it explicitly after container creation, for example with `uv python install 3.11`.
+
+Python interpreters and uv cache are persisted under `/opt/uv` via a feature volume mount. This helps avoid repeated downloads across container rebuilds and restarts.
