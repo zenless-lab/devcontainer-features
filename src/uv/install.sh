@@ -172,6 +172,7 @@ install_uv() {
 prepare_uv_dirs() {
     mkdir -p /opt/uv/cache /opt/uv/python
     set_remote_ownership /opt/uv
+    chmod -R o+rwX /opt/uv
 }
 
 init_autocompletion() {
