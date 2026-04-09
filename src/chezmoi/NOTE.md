@@ -7,22 +7,24 @@ Installs the official chezmoi binary into /usr/local/bin.
 ```json
 "features": {
     "ghcr.io/zenless-lab/devcontainer-features/chezmoi:1": {
-        "devMode": true
+        "config": "[merge]\nstats = true\n",
+        "configFormat": "toml"
     }
 }
 ```
 
 ## Feature Options
 
-| Option   | Type    | Default | Description                                                                 |
-|---------|---------|---------|-----------------------------------------------------------------------------|
-| devMode | boolean | false   | Enable development mode; creates a shell alias so chezmoi uses the workspace as its source. |
-## Development Mode
+| Option        | Type    | Default | Description                                                                                                                |
+|--------------|---------|---------|----------------------------------------------------------------------------------------------------------------------------|
+| install      | boolean | true    | If true, installs the chezmoi binary.                                                                                      |
+| config       | string  | ``      | Configuration content written to `~/.config/chezmoi/chezmoi.{configFormat}`. Merged with settings in your dotfiles repo.  |
+| configFormat | string  | `toml`  | Format of the written configuration file. One of: `json`, `jsonc`, `toml`, `yaml`.                                        |
 
-When `devMode` is `true`, the feature creates `/etc/profile.d/chezmoi-dev-mode.sh` with:
+## Configuration File
 
-```sh
-alias chezmoi='chezmoi --source .'
-```
-
-Use this mode when your workspace itself is the chezmoi source repository. The alias makes commands like `chezmoi add ~/.bashrc` write generated source files such as `dot_bashrc` into the current working directory.
+When `config` is non-empty, the feature writes the provided string verbatim to
+`~/.config/chezmoi/chezmoi.{configFormat}`. This file is read by chezmoi on every
+invocation and is merged with any configuration declared inside your dotfiles
+repository, letting you inject machine-specific or container-specific settings
+without modifying the shared dotfiles source.

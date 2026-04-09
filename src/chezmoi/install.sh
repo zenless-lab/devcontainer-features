@@ -3,7 +3,9 @@
 set -euo pipefail
 
 
-DEVMODE=${DEVMODE:-0}
+INSTALL=${INSTALL:-true}
+CONFIG=${CONFIG:-}
+CONFIGFORMAT=${CONFIGFORMAT:-toml}
 
 CHEZMOI_INSTALL_DIR=/usr/local/bin
 CHEZMOI_INSTALL_URL=https://get.chezmoi.io
@@ -65,7 +67,7 @@ install_chezmoi() {
 }
 
 
-configure_dev_mode() {
+write_config() {
     local user_home
     local user_name
     local config_dir
@@ -74,25 +76,20 @@ configure_dev_mode() {
     user_home=$(detect_user_home)
     user_name=${_REMOTE_USER:-root}
     config_dir="${user_home}/.config/chezmoi"
-    config_file="${config_dir}/chezmoi.yaml"
+    config_file="${config_dir}/chezmoi.${CONFIGFORMAT}"
 
     mkdir -p "${config_dir}"
-    touch "${config_file}"
-
-    if grep -Eq '^[[:space:]]*sourceDir:' "${config_file}"; then
-        sed -i 's|^[[:space:]]*sourceDir:.*$|sourceDir: .|' "${config_file}"
-    else
-        echo "sourceDir: ." >> "${config_file}"
-    fi
-
+    printf '%s' "${CONFIG}" > "${config_file}"
     chown -R "${user_name}:" "${config_dir}"
 }
 
 
 echo "Activating feature 'chezmoi'"
 trap 'rm -f "${CHEZMOI_INSTALLER_SCRIPT:-}"' EXIT
-install_chezmoi
-if is_true "${DEVMODE}"; then
-    configure_dev_mode
+if is_true "${INSTALL}"; then
+    install_chezmoi
 fi
-echo "chezmoi installation complete."
+if [ -n "${CONFIG}" ]; then
+    write_config
+fi
+echo "chezmoi done."

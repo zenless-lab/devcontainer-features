@@ -1,14 +1,25 @@
 {
     "id": "chezmoi",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "name": "chezmoi",
-    "description": "Installs chezmoi and optionally enables workspace development mode.",
+    "description": "Installs chezmoi and optionally writes a configuration file.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/chezmoi",
     "options": {
-        "devMode": {
+        "install": {
             "type": "boolean",
-            "default": false,
-            "description": "If true, writes a chezmoi config file so chezmoi uses the current working directory as the source directory."
+            "default": true,
+            "description": "If true, installs the chezmoi binary."
+        },
+        "config": {
+            "type": "string",
+            "default": "",
+            "description": "Configuration content to write to ~/.config/chezmoi/chezmoi.{configFormat}. When non-empty, the file is created so it can be merged with settings defined in your dotfiles repository."
+        },
+        "configFormat": {
+            "type": "string",
+            "enum": ["json", "jsonc", "toml", "yaml"],
+            "default": "toml",
+            "description": "Format of the configuration file written when 'config' is non-empty. One of: json, jsonc, toml, yaml."
         }
     },
     "dependsOn": {
