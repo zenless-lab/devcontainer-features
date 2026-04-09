@@ -1,7 +1,7 @@
 
 # chezmoi (chezmoi)
 
-Installs chezmoi and optionally enables workspace development mode.
+Installs chezmoi and optionally writes a configuration file.
 
 ## Example Usage
 
@@ -15,7 +15,9 @@ Installs chezmoi and optionally enables workspace development mode.
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| devMode | If true, writes a chezmoi config file so chezmoi uses the current working directory as the source directory. | boolean | false |
+| install | If true, installs the chezmoi binary. | boolean | true |
+| config | Configuration content to write to ~/.config/chezmoi/chezmoi.{configFormat}. When non-empty, the file is created so it can be merged with settings defined in your dotfiles repository. | string | - |
+| configFormat | Format of the configuration file written when 'config' is non-empty. One of: json, jsonc, toml, yaml. | string | toml |
 
 
 
