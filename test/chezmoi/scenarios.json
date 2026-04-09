@@ -1,9 +1,19 @@
 {
-    "dev_mode": {
+    "with_config_toml": {
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "chezmoi": {
-                "devMode": true
+                "config": "[merge]\nstats = true\n",
+                "configFormat": "toml"
+            }
+        }
+    },
+    "with_config_yaml": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "chezmoi": {
+                "config": "merge:\n  stats: true\n",
+                "configFormat": "yaml"
             }
         }
     }
