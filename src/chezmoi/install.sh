@@ -79,6 +79,9 @@ write_config() {
     config_file="${config_dir}/chezmoi.${CONFIGFORMAT}"
 
     mkdir -p "${config_dir}"
+    chown "${user_name}:" "${user_home}/.config"
+    chmod u+rwx "${user_home}/.config"
+
     printf '%s' "${CONFIG}" > "${config_file}"
     chown -R "${user_name}:" "${config_dir}"
 }
