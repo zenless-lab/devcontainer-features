@@ -78,10 +78,9 @@ write_config() {
     config_dir="${user_home}/.config/chezmoi"
     config_file="${config_dir}/chezmoi.${CONFIGFORMAT}"
 
-    if [ ! -d "${user_home}/.config" ]; then
-        mkdir -p "${user_home}/.config"
-        chown "${user_name}:" "${user_home}/.config"
-    fi
+    mkdir -p "${user_home}/.config"
+    chown "${user_name}:" "${user_home}/.config"
+    chmod u+rwx "${user_home}/.config"
 
     mkdir -p "${config_dir}"
     printf '%s' "${CONFIG}" > "${config_file}"
