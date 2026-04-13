@@ -18,6 +18,13 @@ An extremely fast Python package installer and resolver, written in Rust.
 | version | Select the version of uv to install. | string | latest |
 | completionShell | Install autocompletion for a specific shell, or try to detect automatically. | string | automatic |
 
+## Customizations
+
+### VS Code Extensions
+
+- `ms-python.python`
+- `tamasfe.even-better-toml`
+
 
 
 ---
