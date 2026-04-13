@@ -31,4 +31,6 @@ This feature installs `uv` only. It does not install Python automatically.
 
 If your project pins a Python version, install it explicitly after container creation, for example with `uv python install 3.11`.
 
-Python interpreters and uv cache are persisted under `/opt/uv` via a feature volume mount. This helps avoid repeated downloads across container rebuilds and restarts.
+Python interpreters, uv cache, and the default project virtual environment (`UV_PROJECT_ENVIRONMENT=/opt/uv/venv`) are persisted under `/opt/uv` via a feature volume mount. This helps avoid repeated downloads across container rebuilds and restarts.
+
+Because project environments are created at `/opt/uv/venv` by default, project tooling should reference that environment path when selecting an interpreter.
