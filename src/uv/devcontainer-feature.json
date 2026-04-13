@@ -44,7 +44,7 @@
     ],
     "customizations": {
         "vscode": {
-            "extensions":[
+            "extensions": [
                 "ms-python.python",
                 "tamasfe.even-better-toml"
             ],
