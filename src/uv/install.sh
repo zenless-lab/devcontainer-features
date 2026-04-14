@@ -175,6 +175,13 @@ prepare_uv_dirs() {
     chmod -R o+rwX /opt/uv
 }
 
+create_default_venv() {
+    echo "Creating default virtual environment at /opt/uv/venv..."
+    remote_user_do "${uv_command}" venv /opt/uv/venv
+    set_remote_ownership /opt/uv/venv
+    chmod -R o+rwX /opt/uv/venv
+}
+
 init_autocompletion() {
     if [ -z "$COMPLETION_SHELL" ] || [ "$COMPLETION_SHELL" = "none" ]; then
         echo "Autocompletion setup skipped as per configuration."
@@ -212,6 +219,7 @@ init_autocompletion() {
 # Main installation flow
 install_uv
 prepare_uv_dirs
+create_default_venv
 init_autocompletion
 
 echo "UV installation script completed."
