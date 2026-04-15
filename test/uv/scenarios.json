@@ -30,5 +30,23 @@
                 "completionShell": "none"
             }
         }
+    },
+    "tools_disabled": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "uv": {
+                "completionShell": "none",
+                "toolsToInstall": ""
+            }
+        }
+    },
+    "tools_custom": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "uv": {
+                "completionShell": "none",
+                "toolsToInstall": "ruff,black"
+            }
+        }
     }
 }

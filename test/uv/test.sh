@@ -20,4 +20,9 @@ cd /
 check "virtual environment exists at VIRTUAL_ENV" bash -c '[ -d "${VIRTUAL_ENV}/bin" ]'
 check "python executable exists at VIRTUAL_ENV" bash -c '[ -x "${VIRTUAL_ENV}/bin/python" ]'
 
+# Verify default CLI tools are installed via uv tool
+check "ruff is installed via uv tool" bash -lc 'uv tool list | grep -Eq "^ruff\b"'
+check "pytest is installed via uv tool" bash -lc 'uv tool list | grep -Eq "^pytest\b"'
+check "black is installed via uv tool" bash -lc 'uv tool list | grep -Eq "^black\b"'
+
 reportResults
