@@ -1,6 +1,7 @@
 {
     "default": {
         "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "onCreateCommand": "git init --quiet",
         "features": {
             "ghcr.io/devcontainers/features/git:1": {},
             "pre-commit": {}
