@@ -188,10 +188,6 @@ install_uv() {
 }
 
 prepare_uv_dirs() {
-    if [ -d "/opt/uv" ]; then
-        echo "UV directories already exist. Skipping preparation."
-        return
-    fi
     mkdir -p /opt/uv/cache /opt/uv/python
     set_remote_ownership /opt/uv
     chmod -R o+rwX /opt/uv
