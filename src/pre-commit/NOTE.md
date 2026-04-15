@@ -16,9 +16,8 @@ This feature has no options.
 
 ## Overview
 
-- **Dependency**: Uses `dependsOn` to install `ghcr.io/zenless-lab/devcontainer-features/uv:1` with `toolsToInstall=pre-commit` and `ghcr.io/devcontainers/features/git:1`.
-- **Behavior**: Uses `updateContentCommand` to run `pre-commit install --allow-missing-config` in the workspace.
-- **Fallback**: If `pre-commit` is not in `PATH`, it falls back to `uv tool run pre-commit`.
+- **Dependency**: Uses `dependsOn` to install `ghcr.io/zenless-lab/devcontainer-features/uv:1` with `toolsToInstall=pre-commit`.
+- **Behavior**: Uses `updateContentCommand` to run `pre-commit install --allow-missing-config` directly in the workspace.
 
 ## Notes
 
