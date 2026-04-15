@@ -1,0 +1,19 @@
+{
+    "id": "pre-commit",
+    "version": "0.1.0",
+    "name": "pre-commit Hook",
+    "description": "Installs pre-commit via uv and installs Git hook after container creation.",
+    "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/pre-commit",
+    "options": {},
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/uv:1": {
+            "completionShell": "",
+            "toolsToInstall": "pre-commit"
+        }
+    },
+    "postCreateCommand": "pre-commit install",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/git"
+    ]
+}

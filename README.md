@@ -12,6 +12,7 @@ This repository contains a collection of dev container Features.
 | [Mamba](src/mamba) | `mamba` | Installs Mamba, a fast, robust, and cross-platform package manager. |
 | [Micromamba](src/micromamba) | `micromamba` | Installs Micromamba, a tiny, pure C++ executable package manager. |
 | [OpenCode](src/opencode) | `opencode` | Installs OpenCode CLI. |
+| [pre-commit Hook](src/pre-commit) | `pre-commit` | Installs pre-commit via uv and runs `pre-commit install` via `updateContentCommand`. |
 | [System Packages](src/pkg) | `pkg` | Installs system packages on various Linux distributions. |
 | [Tauri Dependencies](src/tauri) | `tauri` | Installs system dependencies required for Tauri v2 development. |
 | [TeX Live](src/tex-live) | `tex-live` | Installs TeX Live, a comprehensive TeX system. |
@@ -61,6 +62,7 @@ ghcr.io/zenless-lab/devcontainer-features/pkg:1
 │   ├── mamba
 │   ├── micromamba
 │   ├── opencode
+│   ├── pre-commit
 │   ├── pkg
 │   ├── tauri
 │   ├── tex-live
