@@ -17,6 +17,7 @@ An extremely fast Python package installer and resolver, written in Rust.
 |-----|-----|-----|-----|
 | version | Select the version of uv to install. | string | latest |
 | completionShell | Install autocompletion for a specific shell, or try to detect automatically. | string | automatic |
+| toolsToInstall | Comma-separated list of CLI tools to install with uv tool install. Set to empty string to skip tool installation. | string | ruff,pytest,ty,black,pyright,pre-commit,rust-just |
 
 ## Customizations
 
