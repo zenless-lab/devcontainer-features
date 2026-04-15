@@ -23,11 +23,21 @@
             }
         }
     },
-    "python_install_path": {
+    "tools_disabled": {
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "uv": {
-                "completionShell": "none"
+                "completionShell": "",
+                "toolsToInstall": ""
+            }
+        }
+    },
+    "tools_custom": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "uv": {
+                "completionShell": "none",
+                "toolsToInstall": "ruff,black"
             }
         }
     }

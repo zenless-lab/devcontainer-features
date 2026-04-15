@@ -6,7 +6,8 @@ echo "Starting UV installation script..."
 # NOTE: The `install.sh` script is always executed as root.
 
 UV_VERSION="${VERSION:-latest}"
-COMPLETION_SHELL="${COMPLETIONSHELL:-automatic}"
+COMPLETION_SHELL="${COMPLETIONSHELL-automatic}"
+TOOLS_TO_INSTALL="${TOOLSTOINSTALL-ruff,pytest,ty,black,pyright,pyrefly,pre-commit,rust-just}"
 
 uv_command=""
 
@@ -55,6 +56,23 @@ find_user_home() {
     else
         echo "/root"
     fi
+}
+
+
+trim_whitespace() {
+    local value="$1"
+
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+    printf '%s' "$value"
+}
+
+
+print_parameters() {
+    echo "Installation parameters:"
+    echo "  UV version:        ${UV_VERSION}"
+    echo "  Completion shell:  ${COMPLETION_SHELL}"
+    echo "  Tools to install:  ${TOOLS_TO_INSTALL}"
 }
 
 
@@ -182,6 +200,35 @@ create_default_venv() {
     chmod -R o+rwX /opt/uv/venv
 }
 
+install_uv_tools() {
+    local raw_tools=()
+    local tool_name
+    local tools=()
+
+    if [ -z "${TOOLS_TO_INSTALL}" ]; then
+        echo "No uv tools requested. Skipping tool installation."
+        return
+    fi
+
+    IFS=',' read -r -a raw_tools <<< "${TOOLS_TO_INSTALL}"
+    for tool_name in "${raw_tools[@]}"; do
+        tool_name="$(trim_whitespace "${tool_name}")"
+        if [ -n "${tool_name}" ]; then
+            tools+=("${tool_name}")
+        fi
+    done
+
+    if [ "${#tools[@]}" -eq 0 ]; then
+        echo "No uv tools to install after filtering."
+        return
+    fi
+
+    for tool_name in "${tools[@]}"; do
+        echo "Installing uv tool: ${tool_name}"
+        remote_user_do "${uv_command}" tool install "${tool_name}"
+    done
+}
+
 init_autocompletion() {
     if [ -z "$COMPLETION_SHELL" ] || [ "$COMPLETION_SHELL" = "none" ]; then
         echo "Autocompletion setup skipped as per configuration."
@@ -217,9 +264,11 @@ init_autocompletion() {
 }
 
 # Main installation flow
+print_parameters
 install_uv
 prepare_uv_dirs
 create_default_venv
+install_uv_tools
 init_autocompletion
 
 echo "UV installation script completed."
