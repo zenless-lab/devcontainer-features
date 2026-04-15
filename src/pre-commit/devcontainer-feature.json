@@ -11,7 +11,7 @@
             "toolsToInstall": "pre-commit"
         }
     },
-    "updateContentCommand": "pre-commit install --allow-missing-config)",
+    "updateContentCommand": "pre-commit install --allow-missing-config",
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils",
         "ghcr.io/devcontainers/features/git"
