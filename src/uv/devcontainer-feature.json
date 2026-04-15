@@ -26,7 +26,7 @@
         },
         "toolsToInstall": {
             "type": "string",
-            "default": "ruff,pytest,ty,black,pyright,pyrefly,pre-commit,rust-just",
+            "default": "ruff,pytest,ty,black,pyright,pre-commit,rust-just",
             "description": "Comma-separated list of CLI tools to install with uv tool install. Set to empty string to skip tool installation."
         }
     },
