@@ -6,8 +6,8 @@ echo "Starting UV installation script..."
 # NOTE: The `install.sh` script is always executed as root.
 
 UV_VERSION="${VERSION:-latest}"
-COMPLETION_SHELL="${COMPLETIONSHELL:-automatic}"
-TOOLS_TO_INSTALL="${TOOLSTOINSTALL:-ruff,pytest,ty,black,pyright,pyrefly,pre-commit,rust-just}"
+COMPLETION_SHELL="${COMPLETIONSHELL-automatic}"
+TOOLS_TO_INSTALL="${TOOLSTOINSTALL-ruff,pytest,ty,black,pyright,pyrefly,pre-commit,rust-just}"
 
 uv_command=""
 
