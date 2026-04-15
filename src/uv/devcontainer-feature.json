@@ -1,7 +1,7 @@
 {
     "name": "uv",
     "id": "uv",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "An extremely fast Python package installer and resolver, written in Rust.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/uv",
     "options": {
@@ -33,7 +33,7 @@
     "containerEnv": {
         "UV_PYTHON_INSTALL_DIR": "/opt/uv/python",
         "UV_CACHE_DIR": "/opt/uv/cache",
-        "VIRTUAL_ENV": "/opt/uv/venv"
+        "UV_PROJECT_ENVIRONMENT": "/opt/uv/venv"
     },
     "dependsOn": {
         "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {
