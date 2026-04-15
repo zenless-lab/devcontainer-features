@@ -116,7 +116,7 @@ check_is_init_autocompletion() {
             ;;
         fish)
             pattern="uv generate-shell-completion fish"
-            profile_files=("${remote_user_home}/.config/fish/completions/uv.fish")
+            profile_files=("${remote_user_home}/.config/fish/config.fish" "${remote_user_home}/.config/fish/completions/uv.fish")
             ;;
         elvish)
             pattern="uv generate-shell-completion elvish"
@@ -188,17 +188,15 @@ install_uv() {
 }
 
 prepare_uv_dirs() {
+    if [ -d "/opt/uv" ]; then
+        echo "UV directories already exist. Skipping preparation."
+        return
+    fi
     mkdir -p /opt/uv/cache /opt/uv/python
     set_remote_ownership /opt/uv
     chmod -R o+rwX /opt/uv
 }
 
-create_default_venv() {
-    echo "Creating default virtual environment at /opt/uv/venv..."
-    remote_user_do "${uv_command}" venv /opt/uv/venv
-    set_remote_ownership /opt/uv/venv
-    chmod -R o+rwX /opt/uv/venv
-}
 
 install_uv_tools() {
     local raw_tools=()
@@ -267,7 +265,6 @@ init_autocompletion() {
 print_parameters
 install_uv
 prepare_uv_dirs
-create_default_venv
 install_uv_tools
 init_autocompletion
 
