@@ -58,7 +58,7 @@ Example:
 }
 ```
 
-For available values and behavior details, see [document](https://geminicli.com/docs/reference/configuration/)
+For available values and behavior details, see [the configuration reference](https://geminicli.com/docs/reference/configuration/)
 
 ## Shared Credentials and Global Config
 
