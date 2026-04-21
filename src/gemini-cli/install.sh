@@ -73,7 +73,7 @@ install_gemini_cli() {
 	fi
 
 	echo "Installing ${package_spec} with npm"
-	npm install -g ${package_spec}
+	npm install -g "${package_spec}"
 }
 
 
