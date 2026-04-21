@@ -15,6 +15,9 @@
             "description": "Select the Gemini CLI version to install."
         }
     },
+    "containerEnv": {
+        "GEMINI_SANDBOX": "false"
+    },
     "mounts": [
         {
             "type": "volume",
