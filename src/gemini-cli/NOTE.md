@@ -7,48 +7,44 @@ Installs Google Gemini CLI.
 | Option | Description | Value Type | Default Value |
 |---|---|---|---|
 | geminiCliVersion | Select the Gemini CLI version to install. | string | latest |
-| sandbox | Set the default `GEMINI_SANDBOX` value exported by the feature profile script. | string | false |
-| geminiCliHome | Set `GEMINI_CLI_HOME` and pre-create its `.gemini` directory. Leave empty to avoid configuring `GEMINI_CLI_HOME`. | string |  |
 
 ## Usage
 
 ```json
 "features": {
     "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:2": {
-        "geminiCliVersion": "latest",
-        "sandbox": "docker",
-        "geminiCliHome": "/gemini-cli"
+        "geminiCliVersion": "latest"
     }
 }
 ```
 
 ## Overview
 
-- **Dependency**: Uses `dependsOn` to pull in `ghcr.io/devcontainers/features/node:1` instead of installing Node.js itself.
-- **Installation**: Reuses the `pnpm` installed by the Node feature, then installs `@google/gemini-cli` globally with `pnpm add -g`.
-- **PATH**: Configures `pnpm` global installs to place the Gemini CLI binary in `/usr/local/bin`, which is already on the default shell PATH.
-- **Sandbox default**: Writes `/etc/profile.d/gemini-cli.sh` to export `GEMINI_SANDBOX=false` by default, or `docker` / `runsc` when configured.
-- **Optional shared Gemini state**: Only writes `GEMINI_CLI_HOME` to `/etc/profile.d/gemini-cli.sh` when `geminiCliHome` is configured.
+- **Dependency**: Uses `dependsOn` to pull in `ghcr.io/devcontainers/features/node:1`.
+- **Installation**: Installs `@google/gemini-cli` globally with `npm install -g`.
+- **Shared cache volume**: Mounts a named volume to `/opt/gemini-cli`.
+- **Credential and config persistence**: Stores Gemini credential/config files in the shared cache volume and symlinks them into `${HOME}/.gemini`.
+- **Runtime access control**: Runs a post-create ACL script to grant the current container user write access to the shared cache files.
 
-## Shared Credentials
+## Shared Credentials and Global Config
 
-Gemini CLI creates its `.gemini` directory under `GEMINI_CLI_HOME`. By default this feature does not set `GEMINI_CLI_HOME`, so Gemini CLI falls back to its own default location.
+This feature now stores Gemini credential/config files in a shared cache volume:
 
-If you want multiple devcontainers on the same machine to reuse the same Gemini CLI credentials and local state, set `geminiCliHome` and mount a host directory to the same path.
+- `/opt/gemini-cli/oauth_creds.json`
+- `/opt/gemini-cli/google_accounts.json`
+- `/opt/gemini-cli/settings.json`
 
-Example:
+When a devcontainer starts, the feature applies ACL entries for the current container user. This allows different containers to reuse the same login session and global Gemini CLI settings, similar to local-machine behavior.
 
-```json
-{
-    "mounts": [
-        "source=${localEnv:HOME}/.cache/devcontainer-gemini-cli,target=/gemini-cli,type=bind"
-    ],
-    "features": {
-        "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:2": {
-            "geminiCliHome": "/gemini-cli"
-        }
-    }
-}
-```
+## Intentionally Excluded from Shared Cache
 
-With this mount, every devcontainer that uses the same host path will see the same `/gemini-cli/.gemini` directory.
+The following data is intentionally not included in the shared cache:
+
+- `projects.json`
+- `GEMINI.md`
+- `skills/`
+
+Reasons:
+
+- `projects.json` stores workspace absolute paths, which are not portable across different containers. Rebuilding this state is usually a one-time trust click.
+- `GEMINI.md` and `skills/` can be modified by agents. Sharing them across projects may increase cross-project data leakage risk.
