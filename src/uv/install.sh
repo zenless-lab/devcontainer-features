@@ -187,12 +187,26 @@ install_uv() {
     echo "UV installation completed."
 }
 
-prepare_uv_dirs() {
-    mkdir -p /opt/uv/cache /opt/uv/python
-    set_remote_ownership /opt/uv
-    chmod -R o+rwX /opt/uv
-}
+setup_uv() {
+    readonly ACL_SCRIPT_PATH="/usr/local/share/acl-scripts/uv-acls.sh"
 
+    mkdir -p /opt/uv/cache \
+        /opt/uv/python \
+        /opt/uv/venv
+
+    chmod o+rwX /opt/uv
+    set_remote_ownership /opt/uv/python
+    set_remote_ownership /opt/uv/venv
+
+    mkdir -p "$(dirname "${ACL_SCRIPT_PATH}")"
+    tee "${ACL_SCRIPT_PATH}" > /dev/null <<EOF
+#!/bin/bash
+set -e
+
+sudo setfacl -R -m "d:u:${_REMOTE_USER}:rwX" /opt/uv/cache
+EOF
+    chmod +x "${ACL_SCRIPT_PATH}"
+}
 
 install_uv_tools() {
     local raw_tools=()
@@ -260,7 +274,7 @@ init_autocompletion() {
 # Main installation flow
 print_parameters
 install_uv
-prepare_uv_dirs
+setup_uv
 install_uv_tools
 init_autocompletion
 
