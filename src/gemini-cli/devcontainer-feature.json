@@ -27,7 +27,7 @@
     ],
     "dependsOn": {
         "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {
-            "pkg": "acl"
+            "pkg": "acl sudo"
         },
         "ghcr.io/devcontainers/features/node:1": {}
     },
