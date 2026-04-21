@@ -38,19 +38,19 @@ setup_gemini_cli() {
 		echo "{}" > "${GEMINI_CLI_AUTH_FILE}"
 	fi
 	chmod u=rw,go= "${GEMINI_CLI_AUTH_FILE}"
-	ln -s "${GEMINI_CLI_AUTH_FILE}" "${GEMINI_CLI_HOME}/oauth_creds.json"
+	ln -sf "${GEMINI_CLI_AUTH_FILE}" "${GEMINI_CLI_HOME}/oauth_creds.json"
 
 	if [ ! -f "${GEMINI_CLI_ACCOUNT_FILE}" ]; then
 		echo "{}" > "${GEMINI_CLI_ACCOUNT_FILE}"
 	fi
 	chmod u=rw,go=r "${GEMINI_CLI_ACCOUNT_FILE}"
-	ln -s "${GEMINI_CLI_ACCOUNT_FILE}" "${GEMINI_CLI_HOME}/google_accounts.json"
+	ln -sf "${GEMINI_CLI_ACCOUNT_FILE}" "${GEMINI_CLI_HOME}/google_accounts.json"
 
 	if [ ! -f "${GEMINI_CLI_SETTINGS_FILE}" ]; then
 		echo "{}" > "${GEMINI_CLI_SETTINGS_FILE}"
 	fi
 	chmod u=rw,go= "${GEMINI_CLI_SETTINGS_FILE}"
-	ln -s "${GEMINI_CLI_SETTINGS_FILE}" "${GEMINI_CLI_HOME}/settings.json"
+	ln -sf "${GEMINI_CLI_SETTINGS_FILE}" "${GEMINI_CLI_HOME}/settings.json"
 
 	mkdir -p "$(dirname "${ACL_SCRIPT_PATH}")"
 	tee "${ACL_SCRIPT_PATH}" > /dev/null <<EOF
