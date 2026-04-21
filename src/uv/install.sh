@@ -190,7 +190,7 @@ install_uv() {
 setup_uv() {
     readonly ACL_SCRIPT_PATH="/usr/local/share/acl-scripts/uv-acls.sh"
 
-    mkdir -p /opt/uv/cache \
+    mkdir -p /opt/uv-cache \
         /opt/uv/python \
         /opt/uv/venv
 
@@ -203,8 +203,8 @@ setup_uv() {
 #!/bin/bash
 set -e
 
-sudo setfacl -R -m "u:${_REMOTE_USER}:rwX" /opt/uv/cache
-sudo setfacl -R -d -m "u:${_REMOTE_USER}:rwX" /opt/uv/cache
+sudo setfacl -R -m "u:${_REMOTE_USER}:rwX" /opt/uv-cache
+sudo setfacl -R -d -m "u:${_REMOTE_USER}:rwX" /opt/uv-cache
 EOF
     chmod +x "${ACL_SCRIPT_PATH}"
 }
