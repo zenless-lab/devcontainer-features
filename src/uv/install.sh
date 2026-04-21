@@ -203,7 +203,7 @@ setup_uv() {
 #!/bin/bash
 set -e
 
-sudo setfacl -R -m "d:u:${_REMOTE_USER}:rwX" /opt/uv/cache
+sudo setfacl -R -d -m "u:${_REMOTE_USER}:rwX" /opt/uv/cache
 EOF
     chmod +x "${ACL_SCRIPT_PATH}"
 }
