@@ -20,6 +20,13 @@
             "description": "Select the Codex version to install."
         }
     },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "openai.chatgpt"
+            ]
+        }
+    },
     "mounts": [
         {
             "type": "volume",
