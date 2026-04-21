@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+readonly INSTALL=${INSTALL:-true}
 readonly CODEX_VERSION="${CODEXVERSION:-latest}"
 
 readonly CODEX_CACHE="/opt/codex"
@@ -69,5 +70,7 @@ install_codex() {
 
 echo "Activating Codex CLI feature (version: ${CODEX_VERSION})"
 setup_codex
-install_codex
+if [ "${INSTALL}" = "true" ]; then
+    install_codex
+fi
 echo "Finished setting up Codex CLI"

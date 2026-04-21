@@ -5,7 +5,14 @@
             "codex": {
                 "codexVersion": "0.119.0"
             }
-        },
-        "postCreateCommand": "/usr/local/share/acl-scripts/codex-acls.sh"
+        }
+    },
+    "without_install": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "codex": {
+                "install": false
+            }
+        }
     }
 }
