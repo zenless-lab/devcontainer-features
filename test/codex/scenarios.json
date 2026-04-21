@@ -1,0 +1,18 @@
+{
+    "specific_version": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "codex": {
+                "codexVersion": "0.119.0"
+            }
+        }
+    },
+    "without_install": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "codex": {
+                "install": false
+            }
+        }
+    }
+}
