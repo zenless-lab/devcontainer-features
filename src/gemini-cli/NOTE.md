@@ -22,9 +22,43 @@ Installs Google Gemini CLI.
 
 - **Dependency**: Uses `dependsOn` to pull in `ghcr.io/devcontainers/features/node:1`.
 - **Installation**: Installs `@google/gemini-cli` globally with `npm install -g`.
+- **Sandbox**: Sets `GEMINI_SANDBOX=false` through `containerEnv`.
 - **Shared cache volume**: Mounts a named volume to `/opt/gemini-cli`.
 - **Credential and config persistence**: Stores Gemini credential/config files in the shared cache volume and symlinks them into `${HOME}/.gemini`.
 - **Runtime access control**: Runs a post-create ACL script to grant the current container user write access to the shared cache files.
+
+## Sandbox Default And Risk Tradeoff
+
+Sandboxing is disabled by default by setting `GEMINI_SANDBOX=false`.
+
+Reasoning:
+
+- The Gemini CLI sandbox is very limited in this environment and can barely execute useful commands.
+- This feature does not explicitly depend on Docker-in-Docker, so enabling sandbox by default can make Gemini CLI unusable in common setups.
+- In this feature's threat model, the remaining risk is considered controllable, while the productivity gain from disabling sandbox is significantly higher.
+
+## Enable Sandbox If Needed
+
+If your environment requires sandboxing:
+
+- Add a Docker-in-Docker feature to your `devcontainer.json`.
+- Override `GEMINI_SANDBOX` in `containerEnv`.
+
+Example:
+
+```json
+{
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/zenless-lab/devcontainer-features/gemini-cli:2": {}
+    },
+    "containerEnv": {
+        "GEMINI_SANDBOX": "docker"
+    }
+}
+```
+
+For available values and behavior details, see [document](https://geminicli.com/docs/reference/configuration/)
 
 ## Shared Credentials and Global Config
 
