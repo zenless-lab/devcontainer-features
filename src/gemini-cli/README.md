@@ -16,8 +16,6 @@ Installs Google Gemini CLI.
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
 | geminiCliVersion | Select the Gemini CLI version to install. | string | latest |
-| sandbox | Set the default GEMINI_SANDBOX value exported by the feature profile script. | string | false |
-| geminiCliHome | Set GEMINI_CLI_HOME and pre-create its .gemini directory. Leave empty to avoid configuring GEMINI_CLI_HOME. | string | - |
 
 
 
