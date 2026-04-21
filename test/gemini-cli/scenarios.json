@@ -1,45 +1,9 @@
 {
-    "debian_default": {
-        "image": "mcr.microsoft.com/devcontainers/base:debian",
-        "features": {
-            "gemini-cli": {}
-        }
-    },
-    "fedora_default": {
-        "image": "fedora:latest",
-        "features": {
-            "gemini-cli": {}
-        }
-    },
     "specific_version": {
         "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "gemini-cli": {
                 "geminiCliVersion": "0.35.1"
-            }
-        }
-    },
-    "sandbox_docker": {
-        "image": "mcr.microsoft.com/devcontainers/base:debian",
-        "features": {
-            "gemini-cli": {
-                "sandbox": "docker"
-            }
-        }
-    },
-    "sandbox_runsc": {
-        "image": "mcr.microsoft.com/devcontainers/base:debian",
-        "features": {
-            "gemini-cli": {
-                "sandbox": "runsc"
-            }
-        }
-    },
-    "custom_home": {
-        "image": "mcr.microsoft.com/devcontainers/base:debian",
-        "features": {
-            "gemini-cli": {
-                "geminiCliHome": "/gemini-cli"
             }
         }
     }

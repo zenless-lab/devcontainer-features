@@ -1,6 +1,6 @@
 {
     "id": "gemini-cli",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "name": "Gemini CLI",
     "description": "Installs Google Gemini CLI.",
     "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/gemini-cli",
@@ -8,30 +8,32 @@
         "geminiCliVersion": {
             "type": "string",
             "proposals": [
-                "latest"
+                "latest",
+                "0.34.0"
             ],
             "default": "latest",
             "description": "Select the Gemini CLI version to install."
-        },
-        "sandbox": {
-            "type": "string",
-            "enum": [
-                "false",
-                "runsc",
-                "docker"
-            ],
-            "default": "false",
-            "description": "Set the default GEMINI_SANDBOX value exported by the feature profile script."
-        },
-        "geminiCliHome": {
-            "type": "string",
-            "default": "",
-            "description": "Set GEMINI_CLI_HOME and pre-create its .gemini directory. Leave empty to avoid configuring GEMINI_CLI_HOME."
         }
     },
+    "containerEnv": {
+        "GEMINI_SANDBOX": "false"
+    },
+    "mounts": [
+        {
+            "type": "volume",
+            "source": "devcontainer-gemini-cli",
+            "target": "/opt/gemini-cli"
+        }
+    ],
     "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {
+            "pkg": "acl sudo"
+        },
         "ghcr.io/devcontainers/features/node:1": {}
     },
+    "postCreateCommand": [
+        "/usr/local/share/acl-scripts/gemini-cli-acls.sh"
+    ],
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils"
     ]

@@ -2,99 +2,66 @@
 
 set -euo pipefail
 
-GEMINI_CLI_VERSION="${GEMINICLIVERSION:-latest}"
-SANDBOX_MODE="${SANDBOX:-false}"
-GEMINI_CLI_HOME="${GEMINICLIHOME:-}"
+readonly GEMINI_CLI_VERSION="${GEMINICLIVERSION:-latest}"
 
-readonly DEFAULT_PNPM_GLOBAL_DIR="/usr/local/share/pnpm-global"
-readonly DEFAULT_PNPM_GLOBAL_BIN_DIR="/usr/local/bin"
+readonly GEMINI_CLI_CACHE="/opt/gemini-cli"
+readonly GEMINI_CLI_AUTH_FILE="${GEMINI_CLI_CACHE}/oauth_creds.json"
+readonly GEMINI_CLI_ACCOUNT_FILE="${GEMINI_CLI_CACHE}/google_accounts.json"
+readonly GEMINI_CLI_SETTINGS_FILE="${GEMINI_CLI_CACHE}/settings.json"
 
 
-configure_sandbox_env() {
-	{
-		echo "export GEMINI_SANDBOX=\"${SANDBOX_MODE}\""
-		if [ -n "${GEMINI_CLI_HOME}" ]; then
-			echo "export GEMINI_CLI_HOME=\"${GEMINI_CLI_HOME}\""
-		fi
-	} > /etc/profile.d/gemini-cli.sh
-	chmod 644 /etc/profile.d/gemini-cli.sh
+remote_user_home() {
+	if [ "${_REMOTE_USER:-}" = "root" ]; then
+		echo "/root"
+	else
+		echo "/home/${_REMOTE_USER}"
+	fi
+}
+
+
+setup_gemini_cli() {
+	readonly GEMINI_CLI_HOME="$(remote_user_home)/.gemini"
+	readonly ACL_SCRIPT_PATH="/usr/local/share/acl-scripts/gemini-cli-acls.sh"
+
+	if [ -n "${GEMINI_CLI_CACHE}" ]; then
+		mkdir -p "${GEMINI_CLI_CACHE}"
+	fi
+	chmod o+rwx "${GEMINI_CLI_CACHE}"
 
 	if [ -n "${GEMINI_CLI_HOME}" ]; then
 		mkdir -p "${GEMINI_CLI_HOME}"
-		chmod +rw "${GEMINI_CLI_HOME}"
 	fi
-}
+	chown "${_REMOTE_USER}:" "${GEMINI_CLI_HOME}"
+	chmod o+rwx "${GEMINI_CLI_HOME}"
 
-
-has_pnpm_global_config() {
-	local global_dir
-	local global_bin_dir
-
-	global_dir="$(pnpm config get global-dir 2>/dev/null || true)"
-	global_bin_dir="$(pnpm config get global-bin-dir 2>/dev/null || true)"
-
-	case "${global_dir}" in
-		""|undefined|null)
-			return 1
-			;;
-	esac
-
-	case "${global_bin_dir}" in
-		""|undefined|null)
-			return 1
-			;;
-	esac
-
-	return 0
-}
-
-
-resolve_pnpm_config_value() {
-	local key="$1"
-	local fallback="$2"
-	local value
-
-	value="$(pnpm config get "${key}" 2>/dev/null || true)"
-	case "${value}" in
-		""|undefined|null)
-			echo "${fallback}"
-			;;
-		*)
-			echo "${value}"
-			;;
-	esac
-}
-
-
-configure_pnpm_global_dirs() {
-	if has_pnpm_global_config; then
-		echo "pnpm global directories already configured. Reusing existing configuration."
-		return
+	if [ ! -f "${GEMINI_CLI_AUTH_FILE}" ]; then
+		echo "{}" > "${GEMINI_CLI_AUTH_FILE}"
 	fi
+	chmod u=rw,go= "${GEMINI_CLI_AUTH_FILE}"
+	ln -sf "${GEMINI_CLI_AUTH_FILE}" "${GEMINI_CLI_HOME}/oauth_creds.json"
 
-	mkdir -p "${DEFAULT_PNPM_GLOBAL_DIR}"
-	chmod 755 "${DEFAULT_PNPM_GLOBAL_DIR}"
-	pnpm config set global-dir "${DEFAULT_PNPM_GLOBAL_DIR}"
-	pnpm config set global-bin-dir "${DEFAULT_PNPM_GLOBAL_BIN_DIR}"
-}
+	if [ ! -f "${GEMINI_CLI_ACCOUNT_FILE}" ]; then
+		echo "{}" > "${GEMINI_CLI_ACCOUNT_FILE}"
+	fi
+	chmod u=rw,go=r "${GEMINI_CLI_ACCOUNT_FILE}"
+	ln -sf "${GEMINI_CLI_ACCOUNT_FILE}" "${GEMINI_CLI_HOME}/google_accounts.json"
 
+	if [ ! -f "${GEMINI_CLI_SETTINGS_FILE}" ]; then
+		echo "{}" > "${GEMINI_CLI_SETTINGS_FILE}"
+	fi
+	chmod u=rw,go= "${GEMINI_CLI_SETTINGS_FILE}"
+	ln -sf "${GEMINI_CLI_SETTINGS_FILE}" "${GEMINI_CLI_HOME}/settings.json"
 
-export_pnpm_runtime_env() {
-	local global_dir
-	local global_bin_dir
+	mkdir -p "$(dirname "${ACL_SCRIPT_PATH}")"
+	tee "${ACL_SCRIPT_PATH}" > /dev/null <<EOF
+#!/bin/bash
+set -e
 
-	global_dir="$(resolve_pnpm_config_value global-dir "${DEFAULT_PNPM_GLOBAL_DIR}")"
-	global_bin_dir="$(resolve_pnpm_config_value global-bin-dir "${DEFAULT_PNPM_GLOBAL_BIN_DIR}")"
-
-	mkdir -p "${global_dir}" "${global_bin_dir}"
-	export PNPM_HOME="${global_bin_dir}"
-	case ":${PATH}:" in
-		*":${PNPM_HOME}:"*)
-			;;
-		*)
-			export PATH="${PNPM_HOME}:${PATH}"
-			;;
-	esac
+sudo setfacl -m "u:${_REMOTE_USER}:rw" "${GEMINI_CLI_AUTH_FILE}"
+sudo setfacl -m "u:${_REMOTE_USER}:rw" "${GEMINI_CLI_ACCOUNT_FILE}"
+sudo setfacl -m "u:${_REMOTE_USER}:rw" "${GEMINI_CLI_SETTINGS_FILE}"
+EOF
+	chmod +x "${ACL_SCRIPT_PATH}"
 }
 
 
@@ -105,14 +72,12 @@ install_gemini_cli() {
 		package_spec="${package_spec}@${GEMINI_CLI_VERSION}"
 	fi
 
-	echo "Installing ${package_spec} with pnpm"
-	pnpm add -g "${package_spec}"
+	echo "Installing ${package_spec} with npm"
+	npm install -g "${package_spec}"
 }
 
 
 echo "Activating feature 'gemini-cli'"
-configure_sandbox_env
-configure_pnpm_global_dirs
-export_pnpm_runtime_env
+setup_gemini_cli
 install_gemini_cli
 echo "Finished installing Gemini CLI"
