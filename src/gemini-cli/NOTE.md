@@ -68,7 +68,7 @@ This feature now stores Gemini credential/config files in a shared cache volume:
 - `/opt/gemini-cli/google_accounts.json`
 - `/opt/gemini-cli/settings.json`
 
-When a devcontainer starts, the feature applies ACL entries for the current container user. This allows different containers to reuse the same login session and global Gemini CLI settings, similar to local-machine behavior.
+After the devcontainer is created, the feature applies ACL entries for the current container user. This allows different containers to reuse the same login session and global Gemini CLI settings, similar to local-machine behavior.
 
 ## Intentionally Excluded from Shared Cache
 
