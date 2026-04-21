@@ -1,5 +1,0 @@
-<type>[optional scope][!]: <description>
-
-[body]
-
-[footer(s)]
