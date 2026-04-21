@@ -1,0 +1,42 @@
+{
+    "id": "codex",
+    "version": "0.1.0",
+    "name": "Codex",
+    "description": "Installs Codex",
+    "documentationURL": "https://github.com/zenless-lab/devcontainer-features/tree/main/src/codex",
+    "options": {
+        "install": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to install Codex in the dev container."
+        },
+        "codexVersion": {
+            "type": "string",
+            "proposals": [
+                "latest",
+                "0.119.0"
+            ],
+            "default": "latest",
+            "description": "Select the Codex version to install."
+        }
+    },
+    "mounts": [
+        {
+            "type": "volume",
+            "source": "devcontainer-codex",
+            "target": "/opt/codex"
+        }
+    ],
+    "dependsOn": {
+        "ghcr.io/zenless-lab/devcontainer-features/pkg:2": {
+            "pkg": "acl sudo"
+        },
+        "ghcr.io/devcontainers/features/node:1": {}
+    },
+    "postCreateCommand": [
+        "/usr/local/share/acl-scripts/codex-acls.sh"
+    ],
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}

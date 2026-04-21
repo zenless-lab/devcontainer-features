@@ -1,0 +1,11 @@
+{
+    "specific_version": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "codex": {
+                "codexVersion": "0.119.0"
+            }
+        },
+        "postCreateCommand": "/usr/local/share/acl-scripts/codex-acls.sh"
+    }
+}
